@@ -14,12 +14,6 @@
             À propos
           </a>
         </li>
-        <li class="navbar-item">
-          <a href="#" @click.prevent>
-            <img src="/services-logo.png" alt="Services Logo" class="nav-logo">
-            Services
-          </a>
-        </li>
       </ul>
 
       <div class="navbar-item">
@@ -50,8 +44,8 @@
       <div class="welcome-message" :class="{ 'show': showWelcomeMessage }">
         Bienvenue !
       </div>
-      <div v-if="showButton" class="welcome-button" :class="{ 'show': showWelcomeMessage }">
-        <a href="https://example.com" class="external-link-button">Visitez notre site</a>
+      <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
+        <a href="https://marechalrf.catalogueformpro.com" class="external-link-button">Visitez notre catalogue</a>
       </div>
     </main>
   </div>
@@ -139,27 +133,23 @@ export default defineComponent({
 
 .welcome-message {
   position: absolute;
-  bottom: -50px; /* Position initiale en dehors de la vue */
+  bottom: -10%;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem; /* Ajustez la taille selon vos besoins */
-  transition: bottom 1s ease; /* Transition vers le bas avec une durée de 1 seconde */
+  font-size: 2rem;
+  transition: bottom 1.5s ease;
 }
 
-.show {
-  bottom: 75%; /* Position finale à afficher */
-}
-
-.content {
-  padding: 2rem;
+.welcome-message.show {
+  bottom: 75%;
 }
 
 .welcome-button {
   position: absolute;
-  bottom: 10%; /* Position initiale ajustée */
+  bottom: -80%;
   left: 50%;
   transform: translateX(-50%);
-  transition: bottom 1s ease; /* Transition vers le bas avec une durée de 1 seconde */
+  transition: bottom 2s ease;
 }
 
 .welcome-button.show {
@@ -174,6 +164,5 @@ export default defineComponent({
   text-decoration: none;
   border-radius: 5px;
   font-size: 1rem;
-  transition: bottom 1s ease; /* Transition vers le bas avec une durée de 1 seconde */
 }
 </style>
