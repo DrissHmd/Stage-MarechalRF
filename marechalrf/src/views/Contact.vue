@@ -1,21 +1,129 @@
 <template>
-  <div class="contact">
-    <h1>Contact</h1>
-    <p>Contact page</p>
+  <div class="contact-page">
+    <div class="contact-container">
+      <h1>Contactez-nous</h1>
+      <form @submit.prevent="submitForm" class="contact-form">
+        <div class="form-group">
+          <label for="name">Nom:</label>
+          <input type="text" id="name" v-model="form.name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" v-model="form.email" required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message:</label>
+          <textarea id="message" v-model="form.message" required></textarea>
+        </div>
+        <button type="submit">Envoyer</button>
+      </form>
+
+      <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2763.7344022486236!2d5.144370121714436!3d46.15603471495694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f3573b6005885b%3A0x19bcb169926e8b09!2s18%20Le%20Corbet%2C%2001960%20Saint-Andr%C3%A9-sur-Vieux-Jonc!5e0!3m2!1sfr!2sfr!4v1718120743638!5m2!1sfr!2sfr" 
+        width="600" 
+        height="450" 
+        style="border:0;" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
 export default defineComponent({
   name: 'Contact',
+  setup() {
+    const form = reactive({
+      name: '',
+      email: '',
+      message: ''
+    });
+
+    const submitForm = () => {
+      // Handle form submission, e.g., send data to a server
+      console.log('Form submitted:', form);
+      // Clear the form after submission
+      form.name = '';
+      form.email = '';
+      form.message = '';
+    };
+
+    return { form, submitForm };
+  }
 });
 </script>
 
 <style scoped>
-.contact {
+.contact-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 2rem;
-  text-align: center;
+}
+
+.contact-container {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.contact-form {
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 90%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  height: 150px;
+}
+
+button {
+  background-color: white;
+  color: black;
+  padding: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: black;
+  color: white;
+}
+
+.map-container {
+  margin-top: 2rem;
+}
+
+.map-container iframe {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  height: 300px;
 }
 </style>
