@@ -1,44 +1,6 @@
 <template>
   <div id="app" class="app">
-    <nav class="navbar">
-      <ul class="navbar-menu">
-        <li class="navbar-item">
-          <router-link to="/">
-            <img src="/home-logo.png" alt="Home Logo" class="nav-logo">
-            Accueil
-          </router-link>
-        </li>
-        <li class="navbar-item">
-          <a href="#" @click.prevent>
-            <img src="/about-logo.png" alt="About Logo" class="nav-logo">
-            À propos
-          </a>
-        </li>
-      </ul>
-
-      <div class="navbar-item">
-          <router-link to="/">
-            <img src="/company-logo.png" alt="Company Logo" class="company-logo">
-            <span class="company-name">MARECHAL Recrutement et Formation</span>
-          </router-link>
-        </div>
-
-        
-      <ul class="navbar-menu">
-        <li class="navbar-item">
-          <a href="#" @click.prevent>
-            <img src="/contact-logo.png" alt="Contact Logo" class="nav-logo">
-            Contact
-          </a>
-        </li>
-        <li class="navbar-item">
-          <a href="#" @click.prevent>
-            <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
-            Compte
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <NavBar />
 
     <main class="content">
       <div class="welcome-message" :class="{ 'show': showWelcomeMessage }">
@@ -48,31 +10,33 @@
         <a href="https://marechalrf.catalogueformpro.com" class="external-link-button">Visitez notre catalogue</a>
       </div>
     </main>
+    
+    <Footer />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
+import NavBar from './components/NavBar.vue';
+import Footer from './components/Footer.vue';
 
 export default defineComponent({
   name: 'App',
+  components: {
+    NavBar,
+    Footer
+  },
   setup() {
     const showWelcomeMessage = ref(false);
-    const showButton = ref(false);
 
     onMounted(() => {
       setTimeout(() => {
         showWelcomeMessage.value = true;
       }, 1000);
-
-      setTimeout(() => {
-        showButton.value = true;
-      }, 2000);
     });
 
     return {
-      showWelcomeMessage,
-      showButton,
+      showWelcomeMessage
     };
   }
 });
@@ -87,79 +51,48 @@ export default defineComponent({
   background-position: center;
   color: black;
   text-align: center;
-}
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.5); 
-}
-.navbar-menu {
-  list-style: none;
-  display: flex;
-  margin: 0;
-  padding: 0;
-}
-.navbar-item {
-  display: flex;
-  align-items: center;
-  margin-left: 1.5rem;
-}
-.navbar-item a, .navbar-item router-link {
-  display: flex;
-  align-items: center;
-  color: black;
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s;
-  cursor: not-allowed;
-}
-.navbar-item a img, .navbar-item router-link img {
-  margin-right: 0.5rem;
-  width: 30px;
-  height: auto;
-}
-.navbar-brand {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
 }
-.company-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-left: 0.5rem;
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
 .welcome-message {
-  position: absolute;
-  bottom: -10%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   font-size: 2rem;
-  transition: bottom 1.5s ease;
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  opacity: 0;
+  transform: translateY(20px);
 }
-
 .welcome-message.show {
-  bottom: 75%;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .welcome-button {
-  position: absolute;
-  bottom: -80%;
-  left: 50%;
-  transform: translateX(-50%);
-  transition: bottom 2s ease;
+  position: relative;
+  margin-top: 2rem;
+  transition: opacity 2s ease, transform 2s ease;
+  opacity: 0;
+  transform: translateY(20px);
 }
-
 .welcome-button.show {
-  bottom: 60%; /* Position finale ajustée */
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .external-link-button {
   display: block;
   padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.6); /* Couleur de fond du bouton */
+  background-color: rgba(0, 0, 0, 0.6);
   color: white;
   text-decoration: none;
   border-radius: 5px;
