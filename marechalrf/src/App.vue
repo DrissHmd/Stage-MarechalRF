@@ -28,6 +28,7 @@ export default {
   position: relative;
   min-height: 100vh;
   background-image: url('/background.jpg');
+  background-attachment: fixed;
   background-size: cover;
   background-position: center;
   color: black;

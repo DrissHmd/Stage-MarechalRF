@@ -1,19 +1,19 @@
 <template>
-    <main class="content">
-      <div class="welcome-message" :class="{ 'show': showWelcomeMessage }">
-        Bienvenue !
-      </div>
-      <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
-        <a href="https://marechalrf.catalogueformpro.com" class="external-link-button">Visitez notre catalogue</a>
-      </div>
-    </main>
+  <main class="content">
+    <div class="welcome-message" :class="{ 'show': showWelcomeMessage }">
+      Bienvenue !
+    </div>
+    <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
+      <a href="https://marechalrf.catalogueformpro.com" class="external-link-button">Visitez notre catalogue</a>
+    </div>
+  </main>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted } from 'vue';
 
 export default defineComponent({
-  name: 'App',
+  name: 'Home',
   setup() {
     const showWelcomeMessage = ref(false);
 
@@ -31,20 +31,26 @@ export default defineComponent({
 </script>
 
 <style scoped>
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
 .content {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 80vh;
   padding: 2rem;
+  background: url('/public/background.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 
 .welcome-message {
   position: relative;
   font-size: 2rem;
-  transition: opacity 1.5s ease, transform 1.5s ease;
+  transition: opacity 1s ease, transform 1s ease;
   opacity: 0;
   transform: translateY(20px);
 }
@@ -56,7 +62,7 @@ export default defineComponent({
 .welcome-button {
   position: relative;
   margin-top: 2rem;
-  transition: opacity 2s ease, transform 2s ease;
+  transition: opacity 1.5s ease, transform 1.5s ease;
   opacity: 0;
   transform: translateY(20px);
 }

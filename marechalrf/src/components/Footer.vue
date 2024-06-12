@@ -13,7 +13,7 @@
         </div>
         <div class="footer-section">
           <h3>Mentions Légales</h3>
-          <router-link to="/privacy">Politique de confidentialité</router-link>
+          <router-link to="/privacy">Politique de confidentialité</router-link><br>
           <router-link to="/legal">Mentions légales</router-link>
         </div>
       </div>

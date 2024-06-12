@@ -1,5 +1,6 @@
 <template>
   <div class="contact-page">
+    <div class="background-static"></div>
     <div class="contact-container">
       <h1>Contactez-nous</h1>
       <form @submit.prevent="submitForm" class="contact-form">
@@ -19,13 +20,13 @@
       </form>
 
       <div class="map-container">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2763.7344022486236!2d5.144370121714436!3d46.15603471495694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f3573b6005885b%3A0x19bcb169926e8b09!2s18%20Le%20Corbet%2C%2001960%20Saint-Andr%C3%A9-sur-Vieux-Jonc!5e0!3m2!1sfr!2sfr!4v1718120743638!5m2!1sfr!2sfr" 
-        width="600" 
-        height="450" 
-        style="border:0;" 
-        loading="lazy" 
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2763.7344022486236!2d5.144370121714436!3d46.15603471495694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f3573b6005885b%3A0x19bcb169926e8b09!2s18%20Le%20Corbet%2C%2001960%20Saint-Andr%C3%A9-sur-Vieux-Jonc!5e0!3m2!1sfr!2sfr!4v1718120743638!5m2!1sfr!2sfr"
+          width="600"
+          height="450"
+          style="border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
       </div>
     </div>
   </div>
@@ -60,9 +61,25 @@ export default defineComponent({
 <style scoped>
 .contact-page {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-static {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/public/background.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
 }
 
 .contact-container {
@@ -72,9 +89,11 @@ export default defineComponent({
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 800px;
   width: 100%;
+  z-index: 1;
 }
 
 .contact-form {
+  display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
 }
@@ -91,7 +110,7 @@ export default defineComponent({
 
 .form-group input,
 .form-group textarea {
-  width: 90%;
+  width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
