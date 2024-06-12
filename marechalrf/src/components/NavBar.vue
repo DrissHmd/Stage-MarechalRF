@@ -67,11 +67,12 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: rgba(255, 255, 255, 0.6); 
+  background: rgba(229, 230, 255, 0.8); 
 }
 
 .navbar-menu {
   list-style: none;
+  width: 100%;
   display: flex;
   margin: 0;
   padding: 0;
@@ -83,10 +84,18 @@ export default {
   max-height: 400px; /* Adjust based on the number of menu items */
 }
 
+ul.navbar-menu{
+  justify-content: right;
+}
+
 .navbar-item {
   display: flex;
   align-items: center;
-  margin-left: 1.5rem;
+  margin-left: 1.3rem;
+}
+
+.company {
+  margin-left: 0%;
 }
 
 .navbar-item a, .navbar-item router-link {
@@ -145,7 +154,7 @@ export default {
   .navbar {
     flex-direction: column;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.5); 
+    background: rgba(229, 230, 255, 0.8); 
   }
 
   .navbar-menu {
