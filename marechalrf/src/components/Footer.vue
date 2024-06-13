@@ -4,11 +4,11 @@
       <div class="footer-section">
         <h3>Coordonnées</h3>
         <p>Adresse: 18 rue du Corbet <br> 01960 ST ANDRE SUR VIEUX JONC</p>
-        <p>Téléphone: 04 28 36 07 93</p>
-        <p>Email: contact@assurancemarechal.fr</p>
+        <p>Téléphone: 04 37 62 64 11</p>
+        <p>Email: contact@marechalrf.com</p>
         <div class="map-container">
           <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2763.7344022486236!2d5.144370121714436!3d46.15603471495694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f3573b6005885b%3A0x19bcb169926e8b09!2s18%20Le%20Corbet%2C%2001960%20Saint-Andr%C3%A9-sur-Vieux-Jonc!5e0!3m2!1sfr!2sfr!4v1718120743638!5m2!1sfr!2sfr"
-            width="50%"
+            width="70%"
             height="100%"
             style="border:0;"
             loading="lazy"
@@ -32,22 +32,10 @@
         </div>
       </div>
       <div class="footer-section">
-        <h3>Communiquation</h3>
+        <h3>Nos certifications</h3>
         <div>
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        </div>
-        <div>
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        </div>
-        <div>
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        </div>
-        <div>
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
-        <img src="/public/qualiopi-logo.png" alt="Qualiopi Logo" style="width: 20%;">
+          certifications de notre organisme de formation<br>
+        <a href="https://cdn.filestackcontent.com/9iH5NDVET3i1hAgOEU7Q" target="_blank"><img class="qualiopi" src="/public/qualiopi-logo.png" alt="Qualiopi Logo"></a>
         </div>
       </div>
     </div>
@@ -127,6 +115,11 @@ export default {
   flex-direction: column;
 }
 
+.qualiopi{
+  width: 100%;
+  padding-top: 3%;
+}
+
 @media (min-width: 769px) {
   .footer {
     max-height: none; 
@@ -136,6 +129,10 @@ export default {
   .footer-content {
     flex-direction: row;
     justify-content: space-evenly;
+  }
+
+  .qualiopi{
+    width: 80%;
   }
 }
 </style>

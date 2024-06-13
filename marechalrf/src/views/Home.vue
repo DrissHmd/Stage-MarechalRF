@@ -6,6 +6,9 @@
     <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
       <a href="https://marechalrf.catalogueformpro.com" class="external-link-button">Visitez notre catalogue</a>
     </div>
+    <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
+      <router-link to="/training-request" class="internal-link-button">Demande de formation personnalisée</router-link>
+    </div>
   </main>
 </template>
 
@@ -72,7 +75,7 @@ html, body {
   transform: translateY(0);
 }
 
-.external-link-button {
+.external-link-button, .internal-link-button {
   display: block;
   padding: 10px 20px;
   background-color: rgba(0, 0, 0, 0.6);
@@ -80,5 +83,9 @@ html, body {
   text-decoration: none;
   border-radius: 5px;
   font-size: 1rem;
+}
+
+.internal-link-button {
+  text-align: center;
 }
 </style>
