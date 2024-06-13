@@ -9,6 +9,7 @@
   import { defineComponent } from 'vue';
   
   export default defineComponent({
+    // eslint-disable-next-line vue/multi-word-component-names
     name: 'About',
   });
   </script>
@@ -17,6 +18,7 @@
   .about {
     padding: 2rem;
     text-align: center;
+    min-height: 80vh;
   }
   </style>
   

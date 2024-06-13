@@ -36,7 +36,7 @@
       <li class="navbar-item">
         <a class="not-allowed">
           <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
-          Compte
+          Compte <br> (bientôt disponible)
         </a>
       </li>
     </ul>

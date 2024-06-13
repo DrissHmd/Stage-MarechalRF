@@ -28,7 +28,7 @@
           <router-link to="/">Accueil</router-link>
           <router-link to="/about">À propos</router-link>
           <router-link to="/contact">Contact</router-link>
-          <a style="cursor: not-allowed;">Compte</a>
+          <a style="cursor: not-allowed;">Compte <br> (bientôt disponible)</a>
         </div>
       </div>
       <div class="footer-section">
