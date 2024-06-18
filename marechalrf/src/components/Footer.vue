@@ -7,21 +7,15 @@
         <p>Téléphone: 04 37 62 64 11</p>
         <p>Email: contact@marechalrf.com</p>
         <div class="map-container">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2763.7344022486236!2d5.144370121714436!3d46.15603471495694!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47f3573b6005885b%3A0x19bcb169926e8b09!2s18%20Le%20Corbet%2C%2001960%20Saint-Andr%C3%A9-sur-Vieux-Jonc!5e0!3m2!1sfr!2sfr!4v1718120743638!5m2!1sfr!2sfr"
-            width="70%"
-            height="100%"
-            style="border:0;"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-          </iframe>
+          <GoogleMapConsent />
         </div>
       </div>
       <div class="footer-section">
         <h3>Conditions</h3>
         <div class="links">
-          <router-link to="">Conditions d'utilisation</router-link>
-          <router-link to="">Politique de confidentialité</router-link>
-          <router-link to="">Mentions légales</router-link>
+          <a style="cursor: not-allowed;">Conditions d'utilisation</a>
+          <a href="/public/politique_confidentialite.pdf" target="_blank">Politique de confidentialité</a>
+          <a style="cursor: not-allowed;">Mentions légales</a>
         </div><br>
         <h3>Navigation</h3>
         <div class="footer-navigation">
@@ -35,7 +29,7 @@
         <h3>Nos certifications</h3>
         <div>
           certifications de notre organisme de formation<br>
-        <a href="https://cdn.filestackcontent.com/9iH5NDVET3i1hAgOEU7Q" target="_blank"><img class="qualiopi" src="/public/qualiopi-logo.png" alt="Qualiopi Logo"></a>
+          <a href="https://cdn.filestackcontent.com/9iH5NDVET3i1hAgOEU7Q" target="_blank"><img class="qualiopi" src="/public/qualiopi-logo.png" alt="Qualiopi Logo"></a>
         </div>
       </div>
     </div>
@@ -43,9 +37,14 @@
 </template>
 
 <script>
+import GoogleMapConsent from '../views/GoogleMapConsent.vue';
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names, vue/no-reserved-component-names
   name: 'Footer',
+  components: {
+    GoogleMapConsent
+  },
   data() {
     return {
       isMobile: false
@@ -86,7 +85,7 @@ export default {
   width: 100%;
 }
 
-.footer-navigation{
+.footer-navigation {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -115,7 +114,7 @@ export default {
   flex-direction: column;
 }
 
-.qualiopi{
+.qualiopi {
   width: 100%;
   padding-top: 3%;
 }
@@ -131,7 +130,7 @@ export default {
     justify-content: space-evenly;
   }
 
-  .qualiopi{
+  .qualiopi {
     width: 80%;
   }
 }

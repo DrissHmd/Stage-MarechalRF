@@ -1,9 +1,8 @@
 <template>
-    <div id="app" class="app">
+  <div id="app" class="app">
     <NavBar />
-
-      <RouterView></RouterView>
-    
+    <RouterView></RouterView>
+    <CookieConsent />
     <Footer />
   </div>
 </template>
@@ -11,7 +10,7 @@
 <script lang="ts">
 import NavBar from './components/NavBar.vue';
 import Footer from './components/Footer.vue';
-import Home from './views/Home.vue';
+import CookieConsent from './views/CookieConsent.vue';
 
 export default {
   name: 'App',
@@ -19,8 +18,7 @@ export default {
     NavBar,
     // eslint-disable-next-line vue/no-reserved-component-names
     Footer,
-    // eslint-disable-next-line vue/no-unused-components
-    Home
+    CookieConsent
   }
 };
 </script>
