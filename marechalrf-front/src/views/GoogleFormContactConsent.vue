@@ -31,7 +31,10 @@
       acceptCookies() {
         localStorage.setItem('cookie_consent', 'accepted');
         this.consentGiven = true;
-        location.reload();
+        this.$router.push('/');
+        setTimeout(() => {
+          location.reload();
+        }, 100);
       }
     }
   };

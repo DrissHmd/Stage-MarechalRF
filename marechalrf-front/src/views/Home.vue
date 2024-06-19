@@ -9,6 +9,14 @@
     <div class="welcome-button" :class="{ 'show': showWelcomeMessage }">
       <router-link to="/training-request" class="internal-link-button">Demande de formation personnalisée</router-link>
     </div>
+    <!-- Nouvelle section pour le texte personnalisé -->
+    <div class="custom-message" :class="{ 'show': showWelcomeMessage }">
+      <h3>Besoin de formations ?</h3>
+      <br>
+      <p>
+        Besoin de formations vivantes et sur-mesure, <br> techniques et <span style="font-weight: bold;">éligibles DDA</span> dans le cadre du <br> Plan de développement des compétences de vos salariés, <br> n’hésitez pas, questionnez-nous !
+      </p>
+    </div>
   </main>
 </template>
 
@@ -57,6 +65,7 @@ html, body {
   transition: opacity 1s ease, transform 1s ease;
   opacity: 0;
   transform: translateY(20px);
+  margin-bottom: 6rem;
 }
 .welcome-message.show {
   opacity: 1;
@@ -87,5 +96,34 @@ html, body {
 
 .internal-link-button {
   text-align: center;
+}
+
+/* Styles pour la section de texte personnalisée */
+.custom-message {
+  margin-top: 5rem;
+  padding: 2rem;
+  padding-top: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: opacity 1.5s ease, transform 1.5s ease;
+  opacity: 0;
+  transform: translateY(20px);
+}
+.custom-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.custom-message h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.custom-message p {
+  font-size: 1rem;
+  color: black;
+  margin: 0;
 }
 </style>
