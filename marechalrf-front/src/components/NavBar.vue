@@ -34,10 +34,10 @@
         </router-link>
       </li>
       <li class="navbar-item">
-        <a class="not-allowed">
+        <router-link to="/users">
           <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
-          Compte <br> (bientôt disponible)
-        </a>
+          Compte
+        </router-link>
       </li>
     </ul>
   </nav>

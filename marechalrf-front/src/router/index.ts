@@ -3,6 +3,7 @@ import Home from '@/views/Home.vue';
 import About from '@/views/About.vue';
 import Contact from '@/views/Contact.vue';
 import TrainingRequest from '../views/TrainingRequest.vue';
+import UserList from '@/views/UserList.vue';
 
 const routes = [
   {
@@ -14,6 +15,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/users',
+    name: 'UserList',
+    component: UserList
   },
   {
     path: '/contact',

@@ -13,16 +13,16 @@
       <div class="footer-section">
         <h3>Conditions</h3>
         <div class="links">
-          <a style="cursor: not-allowed;">Conditions d'utilisation</a>
-          <a href="/public/politique_confidentialite.pdf" target="_blank">Politique de confidentialité</a>
-          <a style="cursor: not-allowed;">Mentions légales</a>
+          <a href="/liste-cookies.pdf" target="_blank">Conditions d'utilisation</a>
+          <a href="/politique_confidentialite.pdf" target="_blank">Politique de confidentialité</a>
+          <a href="/mentions-legales.pdf" target="_blank">Mentions légales</a>
         </div><br>
         <h3>Navigation</h3>
         <div class="footer-navigation">
           <router-link to="/">Accueil</router-link>
           <router-link to="/about">À propos</router-link>
           <router-link to="/contact">Contact</router-link>
-          <a style="cursor: not-allowed;">Compte <br> (bientôt disponible)</a>
+          <router-link to="/users">Compte</router-link>
         </div>
       </div>
       <div class="footer-section">
