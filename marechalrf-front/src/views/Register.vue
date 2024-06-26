@@ -20,7 +20,7 @@
           <input type="text" id="phone" v-model="phone" required />
         </div>
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="username">Identifiant</label>
           <input type="text" id="username" v-model="username" required />
         </div>
         <div class="form-group">
@@ -38,11 +38,13 @@
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Register',
   setup() {
+    const store = useStore();
     const firstName = ref('');
     const lastName = ref('');
     const email = ref('');
@@ -68,7 +70,8 @@ export default defineComponent({
         });
         console.log('Registration successful:', response.data);
         message.value = 'Registration successful!';
-        router.push('/login');
+        store.dispatch('login', response.data.user); // Assurez-vous que la réponse contient les données utilisateur
+        router.push('/');
       } catch (error: any) {
         console.error('Registration failed:', error);
         if (error.response) {
@@ -93,7 +96,6 @@ export default defineComponent({
     };
   }
 });
-
 </script>
 
 

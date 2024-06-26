@@ -5,6 +5,8 @@ import Contact from '../views/Contact.vue';
 import TrainingRequest from '../views/TrainingRequest.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Admin from '../views/Admin.vue';
+import { useStore } from 'vuex';
 
 const routes = [
   {
@@ -36,12 +38,33 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
-  }
+  },
+  { 
+    path: '/admin', 
+    component: Admin, 
+    meta: { requiresAuth: true, requiresRole: 'ROLE_ADMIN' }
+  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const store = useStore();
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isAuthenticated) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

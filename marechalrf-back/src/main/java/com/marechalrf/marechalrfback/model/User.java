@@ -2,6 +2,8 @@ package com.marechalrf.marechalrfback.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -28,44 +30,20 @@ public class User {
     @NotBlank
     private String password;
 
-    public @NotBlank String getPhone() {
-        return phone;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public Long getId() {
+        return id;
     }
 
-    public void setPhone(@NotBlank String phone) {
-        this.phone = phone;
-    }
-
-    public @NotBlank String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotBlank String password) {
-        this.password = password;
-    }
-
-    public @NotBlank String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotBlank String email) {
-        this.email = email;
-    }
-
-    public @NotBlank String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@NotBlank String username) {
-        this.username = username;
-    }
-
-    public @NotBlank String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@NotBlank String lastName) {
-        this.lastName = lastName;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public @NotBlank String getFirstName() {
@@ -76,11 +54,51 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Long getId() {
-        return id;
+    public @NotBlank String getLastName() {
+        return lastName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLastName(@NotBlank String lastName) {
+        this.lastName = lastName;
+    }
+
+    public @NotBlank String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotBlank String email) {
+        this.email = email;
+    }
+
+    public @NotBlank String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(@NotBlank String phone) {
+        this.phone = phone;
+    }
+
+    public @NotBlank String getUsername() {
+        return username;
+    }
+
+    public void setUsername(@NotBlank String username) {
+        this.username = username;
+    }
+
+    public @NotBlank String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotBlank String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }

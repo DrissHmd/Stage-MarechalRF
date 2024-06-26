@@ -4,10 +4,13 @@ import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -25,6 +28,17 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            Optional<User> user = userService.getUserByUsername(username);
+            return ResponseEntity.of(user);
+        }
+        return ResponseEntity.badRequest().body("User not found");
     }
 
     @PostMapping

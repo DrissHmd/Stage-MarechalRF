@@ -1,37 +1,57 @@
 package com.marechalrf.marechalrfback.controller;
 
+import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
-import com.marechalrf.marechalrfback.repository.UserRepository;
+import com.marechalrf.marechalrfback.payload.LoginRequest;
+import com.marechalrf.marechalrfback.service.UserService;
+import com.marechalrf.marechalrfback.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
+        Optional<User> existingUser = userService.getUserByUsername(user.getUsername());
+        if (existingUser.isPresent()) {
+            return ResponseEntity.badRequest().body("Username is already taken!");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully!");
+
+        // Attribuer des rôles par défaut
+        Set<Role> roles = new HashSet<>();
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        roles.add(userRole);
+        user.setRoles(roles);
+
+        userService.createUser(user);
+        return ResponseEntity.ok(Map.of("user", user, "message", "User registered successfully!"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody User user) {
-        Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
-
-        if (optionalUser.isPresent() && passwordEncoder.matches(user.getPassword(), optionalUser.get().getPassword())) {
-            return ResponseEntity.ok("Login successful!");
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+        Optional<User> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
+        if (optionalUser.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
+            return ResponseEntity.ok(Map.of("user", optionalUser.get(), "message", "Login successful!"));
         }
 
         return ResponseEntity.badRequest().body("Invalid username or password!");
