@@ -11,25 +11,69 @@ public class User {
     private Long id;
 
     @NotBlank
-    private String name;
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
 
     @NotBlank
     private String email;
 
-    public String getEmail() {
+    @NotBlank
+    private String phone;
+
+    @NotBlank
+    private String username;
+
+    @NotBlank
+    private String password;
+
+    public @NotBlank String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(@NotBlank String phone) {
+        this.phone = phone;
+    }
+
+    public @NotBlank String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotBlank String password) {
+        this.password = password;
+    }
+
+    public @NotBlank String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(@NotBlank String email) {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public @NotBlank String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(@NotBlank String username) {
+        this.username = username;
+    }
+
+    public @NotBlank String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(@NotBlank String lastName) {
+        this.lastName = lastName;
+    }
+
+    public @NotBlank String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(@NotBlank String firstName) {
+        this.firstName = firstName;
     }
 
     public Long getId() {

@@ -34,7 +34,7 @@
         </router-link>
       </li>
       <li class="navbar-item">
-        <router-link to="/users">
+        <router-link to="/login">
           <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
           Compte
         </router-link>

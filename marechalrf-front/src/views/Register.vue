@@ -1,0 +1,168 @@
+<template>
+  <div class="register-container">
+    <div class="register-box">
+      <h1>Inscription</h1>
+      <form @submit.prevent="register">
+        <div class="form-group">
+          <label for="firstName">Prénom</label>
+          <input type="text" id="firstName" v-model="firstName" required />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Nom</label>
+          <input type="text" id="lastName" v-model="lastName" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" v-model="email" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Numéro</label>
+          <input type="text" id="phone" v-model="phone" required />
+        </div>
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" v-model="username" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Mot de passe</label>
+          <input type="password" id="password" v-model="password" required />
+        </div>
+        <button type="submit" class="register-button">S'inscrire</button>
+      </form>
+      <router-link to="/login" class="login-link">Déjà un compte ? Connectez-vous ici</router-link>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Register',
+  setup() {
+    const firstName = ref('');
+    const lastName = ref('');
+    const email = ref('');
+    const phone = ref('');
+    const username = ref('');
+    const password = ref('');
+    const router = useRouter();
+    const message = ref('');
+
+    const register = async () => {
+      try {
+        const response = await axios.post('http://localhost:8080/api/auth/register', {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          email: email.value,
+          phone: phone.value,
+          username: username.value,
+          password: password.value,
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log('Registration successful:', response.data);
+        message.value = 'Registration successful!';
+        router.push('/login');
+      } catch (error: any) {
+        console.error('Registration failed:', error);
+        if (error.response) {
+          message.value = 'Registration failed: ' + (error.response.data.message || error.response.data);
+        } else if (error.request) {
+          message.value = 'Registration failed: No response from server.';
+        } else {
+          message.value = 'Registration failed: ' + error.message;
+        }
+      }
+    };
+
+    return {
+      firstName,
+      lastName,
+      email,
+      phone,
+      username,
+      password,
+      register,
+      message
+    };
+  }
+});
+
+</script>
+
+
+<style scoped>
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+}
+
+.register-box {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.register-box h1 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.register-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.register-button:hover {
+  background-color: #0056b3;
+}
+
+.login-link {
+  display: block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+</style>
