@@ -22,17 +22,15 @@
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+import { setUser } from '../store'; // Importez la fonction setUser
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Login',
   setup() {
-    const store = useStore();
     const username = ref('');
     const password = ref('');
     const router = useRouter();
-    const message = ref('');
 
     const login = async () => {
       try {
@@ -41,27 +39,23 @@ export default defineComponent({
           password: password.value,
         });
         console.log('Login successful:', response.data);
-        store.dispatch('login', response.data.user); 
-        router.push('/');
+        setUser(response.data); // Utilisez la fonction setUser pour stocker les données utilisateur dans localStorage
+        router.push('/'); // Rediriger vers une page sécurisée après la connexion
       } catch (error: any) {
         console.error('Login failed:', error);
-        // Gérez les erreurs de connexion ici
-        message.value = 'Login failed: ' + error.message;
       }
     };
 
     return {
       username,
       password,
-      login,
-      message
+      login
     };
   }
 });
 </script>
 
 <style scoped>
-/* Votre style reste inchangé */
 .login-container {
   display: flex;
   justify-content: center;

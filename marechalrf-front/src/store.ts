@@ -1,33 +1,18 @@
-import { createStore } from 'vuex';
+const USER_STORAGE_KEY = 'user';
 
-const store = createStore({
-  state: {
-    user: null,
-  },
-  mutations: {
-    setUser(state: { user: any; }, user: any) {
-      state.user = user;
-    },
-    clearUser(state: { user: null; }) {
-      state.user = null;
-    },
-  },
-  actions: {
-    login({ commit }: any, user: any) {
-      commit('setUser', user);
-    },
-    logout({ commit }: any) {
-      commit('clearUser');
-    },
-  },
-  getters: {
-    isAuthenticated(state: { user: any; }) {
-      return !!state.user;
-    },
-    getUser(state: { user: any; }) {
-      return state.user;
-    },
-  },
-});
+export const setUser = (user: any) => {
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+};
 
-export default store;
+export const clearUser = () => {
+  localStorage.removeItem(USER_STORAGE_KEY);
+};
+
+export const getUser = () => {
+  const user = localStorage.getItem(USER_STORAGE_KEY);
+  return user ? JSON.parse(user) : null;
+};
+
+export const isAuthenticated = () => {
+  return !!getUser();
+};

@@ -5,8 +5,8 @@ import Contact from '../views/Contact.vue';
 import TrainingRequest from '../views/TrainingRequest.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
-import Admin from '../views/Admin.vue';
-import { useStore } from 'vuex';
+import Dashboard from '../views/Dashboard.vue'
+import { isAuthenticated } from '@/store';
 
 const routes = [
   {
@@ -39,31 +39,25 @@ const routes = [
     name: 'Register',
     component: Register
   },
-  { 
-    path: '/admin', 
-    component: Admin, 
-    meta: { requiresAuth: true, requiresRole: 'ROLE_ADMIN' }
-  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
+    meta: { requiresAuth: true }
+  }
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 });
 
+// Middleware pour vérifier l'authentification avant chaque navigation
 router.beforeEach((to, from, next) => {
-  const store = useStore();
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!store.getters.isAuthenticated) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      });
-    } else {
-      next();
-    }
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    next({ name: 'Login' }); // Redirige vers la page de connexion si non authentifié
   } else {
-    next();
+    next(); // Poursuit la navigation normalement
   }
 });
 

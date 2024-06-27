@@ -38,13 +38,11 @@
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Register',
   setup() {
-    const store = useStore();
     const firstName = ref('');
     const lastName = ref('');
     const email = ref('');
@@ -52,7 +50,6 @@ export default defineComponent({
     const username = ref('');
     const password = ref('');
     const router = useRouter();
-    const message = ref('');
 
     const register = async () => {
       try {
@@ -69,18 +66,12 @@ export default defineComponent({
           }
         });
         console.log('Registration successful:', response.data);
-        message.value = 'Registration successful!';
-        store.dispatch('login', response.data.user); // Assurez-vous que la réponse contient les données utilisateur
-        router.push('/');
+
+        // Si l'inscription est réussie, enregistrez les informations de session et redirigez
+        localStorage.setItem('token', response.data.token);
+        router.push('/dashboard');
       } catch (error: any) {
         console.error('Registration failed:', error);
-        if (error.response) {
-          message.value = 'Registration failed: ' + (error.response.data.message || error.response.data);
-        } else if (error.request) {
-          message.value = 'Registration failed: No response from server.';
-        } else {
-          message.value = 'Registration failed: ' + error.message;
-        }
       }
     };
 
@@ -91,13 +82,11 @@ export default defineComponent({
       phone,
       username,
       password,
-      register,
-      message
+      register
     };
   }
 });
 </script>
-
 
 <style scoped>
 .register-container {
