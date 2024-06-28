@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import authenticateToken from './authenticate'; // Supposons que c'est le nom du middleware d'authentification
+import authenticateToken from './authentificate.ts';
 
 const app = express();
 const PORT = 8080;

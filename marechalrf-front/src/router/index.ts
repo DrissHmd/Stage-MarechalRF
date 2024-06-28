@@ -6,7 +6,6 @@ import TrainingRequest from '../views/TrainingRequest.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue'
-import { isAuthenticated } from '@/store';
 
 const routes = [
   {
@@ -48,16 +47,21 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 });
 
-// Middleware pour vérifier l'authentification avant chaque navigation
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    next({ name: 'Login' }); // Redirige vers la page de connexion si non authentifié
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (!token) {
+      next({ path: '/login' });
+    } else {
+      next();
+    }
   } else {
-    next(); // Poursuit la navigation normalement
+    next();
   }
 });
 

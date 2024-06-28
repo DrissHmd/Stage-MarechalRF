@@ -21,12 +21,37 @@
   </template>
   
   <script lang="ts">
-  import { defineComponent } from 'vue';
-  
-  export default defineComponent({
-    // eslint-disable-next-line vue/multi-word-component-names
-    name: 'Dashboard',
-  });
+import { defineComponent, ref } from 'vue';
+import axios from '@/axios'; // Import the configured axios instance
+import { useRouter } from 'vue-router';
+
+export default defineComponent({
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'Dashboard',
+  setup() {
+    const message = ref('');
+    const router = useRouter();
+
+    const fetchDashboard = async () => {
+      try {
+        const response = await axios.get('/dashboard');
+        message.value = response.data.message;
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          router.push('/login');
+        } else {
+          console.error('Failed to fetch dashboard:', error);
+        }
+      }
+    };
+
+    fetchDashboard();
+
+    return {
+      message
+    };
+  }
+});
   </script>
   
   <style scoped>

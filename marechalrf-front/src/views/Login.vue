@@ -22,7 +22,6 @@
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { setUser } from '../store'; // Importez la fonction setUser
 
 export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
@@ -38,9 +37,10 @@ export default defineComponent({
           username: username.value,
           password: password.value,
         });
-        console.log('Login successful:', response.data);
-        setUser(response.data); // Utilisez la fonction setUser pour stocker les données utilisateur dans localStorage
-        router.push('/'); // Rediriger vers une page sécurisée après la connexion
+        const token = response.data.token;
+        localStorage.setItem('token', token); // Store the token in localStorage
+        console.log('Login successful:', token);
+        router.push('/dashboard');
       } catch (error: any) {
         console.error('Login failed:', error);
       }

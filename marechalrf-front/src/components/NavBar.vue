@@ -33,33 +33,61 @@
           Contact
         </router-link>
       </li>
-      <li class="navbar-item">
+      <li v-if="!isLoggedIn" class="navbar-item">
         <router-link to="/login">
           <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
           Compte
         </router-link>
       </li>
+      <li v-if="isLoggedIn" class="navbar-item" @click="toggleDropdown">
+        <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
+        <span>Compte</span>
+        <ul v-if="isDropdownOpen" class="dropdown-menu">
+          <router-link class="dashboard-link" to="/dashboard">Profil</router-link>
+          <li @click="logout">Déconnexion</li>
+        </ul>
+      </li>
     </ul>
   </nav>
 </template>
 
+<script lang="ts">
+import { defineComponent, ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-<script>
-export default {
+export default defineComponent({
   name: 'NavBar',
-  data() {
-    return {
-      isMenuOpen: false
-    };
-  },
-  methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-    }
-  }
-};
-</script>
+  setup() {
+    const isMenuOpen = ref(false);
+    const isDropdownOpen = ref(false);
+    const router = useRouter();
 
+    const toggleMenu = () => {
+      isMenuOpen.value = !isMenuOpen.value;
+    };
+
+    const toggleDropdown = () => {
+      isDropdownOpen.value = !isDropdownOpen.value;
+    };
+
+    const logout = () => {
+      localStorage.removeItem('token');
+      router.push('/');
+    };
+
+    const isLoggedIn = computed(() => !!localStorage.getItem('token'));
+
+    return {
+      isMenuOpen,
+      isDropdownOpen,
+      toggleMenu,
+      toggleDropdown,
+      logout,
+      isLoggedIn
+    };
+  }
+});
+</script>
 
 <style scoped>
 .navbar {
@@ -76,15 +104,15 @@ export default {
   display: flex;
   margin: 0;
   padding: 0;
-  transition: max-height 0.3s ease-in-out; /* Smooth transition for menu opening/closing */
-  overflow: hidden; /* Hide overflowing content when menu is closed */
+  transition: max-height 0.3s ease-in-out;
+  overflow: hidden;
 }
 
 .navbar-menu.show {
-  max-height: 400px; /* Adjust based on the number of menu items */
+  max-height: 400px;
 }
 
-ul.navbar-menu{
+ul.navbar-menu {
   justify-content: right;
 }
 
@@ -111,10 +139,15 @@ ul.navbar-menu{
   cursor: not-allowed;
 }
 
-.navbar-item a img, .navbar-item router-link img {
+.navbar-item a img, .navbar-item router-link img, .navbar-item img {
   margin-right: 0.5rem;
   width: 30px;
   height: auto;
+}
+
+.company-logo {
+  width: auto;
+  height: 50px; /* Ajustez la hauteur selon vos besoins */
 }
 
 .company-name {
@@ -135,7 +168,7 @@ ul.navbar-menu{
   background: black;
   margin: 4px;
   display: block;
-  transition: all 0.3s ease-in-out; /* Smooth transition for the hamburger icon */
+  transition: all 0.3s ease-in-out;
 }
 
 .navbar-toggle span.open:nth-child(1) {
@@ -162,7 +195,7 @@ ul.navbar-menu{
     flex-direction: column;
     width: 100%; 
     text-align: center;
-    max-height: 0; /* Initially hidden */
+    max-height: 0;
     transition: max-height 0.3s ease-in-out;
   }
 
@@ -175,5 +208,27 @@ ul.navbar-menu{
   .navbar-menu.show {
     max-height: 400px;
   }
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 80px;
+  right: 10px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu li, .dropdown-menu .dashboard-link {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover, .dropdown-menu .dashboard-link:hover {
+  background-color: #f0f0f0;
 }
 </style>
