@@ -52,16 +52,25 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  console.log(`Navigating to ${to.path}`);
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    const token = localStorage.getItem('token');
-    console.log(token);
-    if (!token) {
-      next({ path: '/login' });
-    } else {
-      next();
-    }
+      const token = localStorage.getItem('token');
+      console.log(`Token found: ${token}`);
+      if (!token) {
+          console.log(`No token found, redirecting to /login`);
+          next({ path: '/login' });
+      } else {
+          const userRole = localStorage.getItem('role'); // Suppose that you store the user role in localStorage
+          console.log(`User role: ${userRole}`);
+          if (to.matched.some(record => record.meta.requiresAdmin) && userRole !== 'ADMIN') {
+              console.log(`User is not admin, redirecting to /`);
+              next({ path: '/' });
+          } else {
+              next();
+          }
+      }
   } else {
-    next();
+      next();
   }
 });
 

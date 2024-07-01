@@ -37,10 +37,11 @@ export default defineComponent({
           username: username.value,
           password: password.value,
         });
-        const token = response.data.token;
-        localStorage.setItem('token', token); // Store the token in localStorage
-        console.log('Login successful:', token);
-        router.push('/dashboard');
+        const { token, role } = response.data;
+        localStorage.setItem('token', token);
+        localStorage.setItem('role', role); 
+        console.log('Login successful:', response.data.token);
+        router.push('/');
       } catch (error: any) {
         console.error('Login failed:', error);
       }

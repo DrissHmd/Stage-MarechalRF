@@ -41,7 +41,6 @@
       </li>
       <li v-if="isLoggedIn" class="navbar-item" @click="toggleDropdown">
         <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
-        <span>Compte</span>
         <ul v-if="isDropdownOpen" class="dropdown-menu">
           <router-link class="dashboard-link" to="/dashboard">Profil</router-link>
           <li @click="logout">Déconnexion</li>
@@ -73,6 +72,9 @@ export default defineComponent({
     const logout = () => {
       localStorage.removeItem('token');
       router.push('/');
+      setTimeout(() => {
+        location.reload();
+      }, 100);
     };
 
     const isLoggedIn = computed(() => !!localStorage.getItem('token'));
