@@ -11,6 +11,7 @@
           <label for="password">Mot de passe</label>
           <input type="password" id="password" v-model="password" required />
         </div>
+        <p v-if="errorMessage" style="color: red;">Identifiant ou mot de passe incorrect</p>
         <button type="submit" class="login-button">Se connecter</button>
       </form>
       <router-link to="/register" class="register-link">Pas de compte ? Inscrivez-vous ici</router-link>
@@ -30,6 +31,7 @@ export default defineComponent({
     const username = ref('');
     const password = ref('');
     const router = useRouter();
+    const errorMessage = ref('');
 
     const login = async () => {
       try {
@@ -41,16 +43,22 @@ export default defineComponent({
         localStorage.setItem('token', token);
         localStorage.setItem('role', role); 
         console.log('Login successful:', response.data.token);
+        errorMessage.value = "";
         router.push('/');
       } catch (error: any) {
         console.error('Login failed:', error);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        errorMessage.value = 'Identifiant ou Mot de passe incorrect';
       }
     };
 
     return {
       username,
       password,
-      login
+      login,
+      errorMessage
     };
   }
 });

@@ -23,21 +23,14 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
                         .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll)
-                .sessionManagement((session) -> session
-                        .sessionFixation().migrateSession()
-                        .invalidSessionUrl("/login?invalid-session")
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
-                        .expiredUrl("/login?session-expired")
-                );
+                .logout(LogoutConfigurer::permitAll);
 
         return http.build();
     }

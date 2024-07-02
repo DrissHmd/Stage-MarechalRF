@@ -60,7 +60,7 @@ router.beforeEach((to, from, next) => {
           console.log(`No token found, redirecting to /login`);
           next({ path: '/login' });
       } else {
-          const userRole = localStorage.getItem('role'); // Suppose that you store the user role in localStorage
+          const userRole = localStorage.getItem('role');
           console.log(`User role: ${userRole}`);
           if (to.matched.some(record => record.meta.requiresAdmin) && userRole !== 'ADMIN') {
               console.log(`User is not admin, redirecting to /`);

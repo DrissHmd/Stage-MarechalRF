@@ -10,7 +10,7 @@ import VueCookies from 'vue-cookies';
 const app = createApp(App)
 
 app.use(router)
-app.config.globalProperties.$setUser = setUser; // Ajoutez vos fonctions au contexte global de l'application si nécessaire
+app.config.globalProperties.$setUser = setUser;
 app.config.globalProperties.$clearUser = clearUser;
 app.config.globalProperties.$getUser = getUser;
 app.config.globalProperties.$isAuthenticated = isAuthenticated;
