@@ -5,6 +5,7 @@ import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.payload.LoginRequest;
 import com.marechalrf.marechalrfback.service.UserService;
 import com.marechalrf.marechalrfback.repository.RoleRepository;
+import com.marechalrf.marechalrfback.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
@@ -51,7 +55,8 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
         Optional<User> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
         if (optionalUser.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
-            return ResponseEntity.ok(Map.of("user", optionalUser.get(), "message", "Login successful!"));
+            String token = jwtUtil.generateToken(loginRequest.getUsername());
+            return ResponseEntity.ok(Map.of("token", token, "role", optionalUser.get().getRoles(), "message", "Login successful!"));
         }
 
         return ResponseEntity.badRequest().body("Invalid username or password!");

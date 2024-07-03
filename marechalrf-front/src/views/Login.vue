@@ -48,11 +48,24 @@ export default defineComponent({
       } catch (error: any) {
         console.error('Login failed:', error);
         setTimeout(() => {
-          window.location.reload();
+          //window.location.reload();
         }, 1000);
         errorMessage.value = 'Identifiant ou Mot de passe incorrect';
       }
     };
+
+    axios.interceptors.request.use(
+      config => {
+        const token = localStorage.getItem('token');
+        if (token) {
+          config.headers['Authorization'] = 'Bearer ' + token;
+        }
+        return config;
+      },
+      error => {
+        return Promise.reject(error);
+      }
+    );
 
     return {
       username,
