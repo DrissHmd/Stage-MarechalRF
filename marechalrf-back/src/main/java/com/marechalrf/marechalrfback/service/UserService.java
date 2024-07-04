@@ -1,5 +1,7 @@
 package com.marechalrf.marechalrfback.service;
 
+import com.marechalrf.marechalrfback.dto.UserDto;
+import com.marechalrf.marechalrfback.dto.mapper.UserMapper;
 import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.repository.RoleRepository;
@@ -16,6 +18,8 @@ import java.util.Set;
 @Service
 public class UserService {
 
+    private final UserMapper userMapper;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -24,6 +28,10 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public UserService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     public Optional<User> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -37,15 +45,14 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByName("ROLE_USER"));
-        user.setRoles(roles);
-        return userRepository.save(user);
+    public UserDto createUser(UserDto userDto) {
+        User user = userMapper.dtoToEntity(userDto);
+        user.setPassword(userDto.getPassword());
+        User userToSave = userRepository.save(user);
+        return userMapper.entityToDTO(userToSave);
     }
 
-    public User updateUser(Long id, User userDetails) {
+    public UserDto updateUser(Long id, UserDto userDetails) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setFirstName(userDetails.getFirstName());
         user.setLastName(userDetails.getLastName());

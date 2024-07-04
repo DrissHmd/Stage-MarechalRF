@@ -2,6 +2,8 @@ package com.marechalrf.marechalrfback.controller;
 
 import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +17,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -42,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@Validated @RequestBody User user) {
+    public ResponseEntity<ReponseModel> createUser(@Validated @RequestBody User user) {
         return userService.createUser(user);
     }
 
