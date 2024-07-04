@@ -52,68 +52,10 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public @NotBlank String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(@NotBlank String firstName) {
-        this.firstName = firstName;
-    }
-
-    public @NotBlank String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(@NotBlank String lastName) {
-        this.lastName = lastName;
-    }
-
-    public @NotBlank String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@NotBlank String email) {
-        this.email = email;
-    }
-
-    public @NotBlank String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(@NotBlank String phone) {
-        this.phone = phone;
-    }
-
-    public @NotBlank String getUsername() {
-        return username;
-    }
-
-    public void setUsername(@NotBlank String username) {
-        this.username = username;
-    }
-
-    public @NotBlank String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotBlank String password) {
+    @PrePersist
+    @PreUpdate
+    private void encodePassword() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(password);
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.password = passwordEncoder.encode(this.password);
     }
 }

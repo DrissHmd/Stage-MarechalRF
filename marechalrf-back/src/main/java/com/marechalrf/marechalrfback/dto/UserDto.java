@@ -9,8 +9,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.marechalrf.marechalrfback.model.Role;
 import lombok.*;
 import lombok.experimental.Accessors;
-@Getter
-@Setter
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @ToString
