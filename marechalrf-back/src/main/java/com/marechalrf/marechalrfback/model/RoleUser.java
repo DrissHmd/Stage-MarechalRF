@@ -1,12 +1,15 @@
 package com.marechalrf.marechalrfback.model;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
+@Getter
+@Setter
 @Entity
-public class UserRole {
+public class RoleUser {
     @EmbeddedId
     private UserRoleKey id;
 
@@ -23,12 +26,4 @@ public class UserRole {
     private LocalDate assignedDate;
 
     // Getters and Setters
-}
-
-@Embeddable
-public class UserRoleKey implements Serializable {
-    private Long userId;
-    private Long roleId;
-
-    // hashCode and equals
 }

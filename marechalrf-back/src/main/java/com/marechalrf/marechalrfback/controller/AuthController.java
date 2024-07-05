@@ -1,5 +1,6 @@
 package com.marechalrf.marechalrfback.controller;
 
+import com.marechalrf.marechalrfback.dto.UserDto;
 import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.payload.LoginRequest;
@@ -33,27 +34,27 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        Optional<User> existingUser = userService.getUserByUsername(user.getUsername());
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
+        Optional<UserDto> existingUser = userService.getUserByUsername(userDto.getUsername());
         if (existingUser.isPresent()) {
             return ResponseEntity.badRequest().body("Username is already taken!");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         // Attribuer des rôles par défaut
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName("ROLE_USER");
         roles.add(userRole);
-        user.setRoles(roles);
+        userDto.setRoles(roles);
 
-        userService.createUser(user);
-        return ResponseEntity.ok(Map.of("user", user, "message", "User registered successfully!"));
+        UserDto createdUser = userService.createUser(userDto);
+        return ResponseEntity.ok(Map.of("user", createdUser, "message", "User registered successfully!"));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-        Optional<User> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
+        Optional<UserDto> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
         if (optionalUser.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
             String token = jwtUtil.generateToken(loginRequest.getUsername());
             return ResponseEntity.ok(Map.of("token", token, "role", optionalUser.get().getRoles(), "message", "Login successful!"));

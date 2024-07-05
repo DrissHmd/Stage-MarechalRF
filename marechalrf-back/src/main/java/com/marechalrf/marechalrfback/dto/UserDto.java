@@ -10,6 +10,8 @@ import com.marechalrf.marechalrfback.model.Role;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+@Getter
+@Setter
 @Accessors(chain = true)
 @NoArgsConstructor
 @ToString
@@ -20,6 +22,8 @@ public class UserDto implements Serializable {
     private String firstname;
     private String lastname;
     private String email;
+    private String phone;
+    private String username;
     private String password;
     private Set<Role> roles = new HashSet<>();
 }

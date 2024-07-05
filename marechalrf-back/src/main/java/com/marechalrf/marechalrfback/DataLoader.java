@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class DataLoader implements CommandLineRunner {
 
@@ -14,11 +16,14 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.findByName("ROLE_USER") == null) {
-            roleRepository.save(new Role("ROLE_USER"));
-        }
-        if (roleRepository.findByName("ROLE_ADMIN") == null) {
-            roleRepository.save(new Role("ROLE_ADMIN"));
+        addRoleIfNotExists("ROLE_USER");
+        addRoleIfNotExists("ROLE_ADMIN");
+    }
+
+    private void addRoleIfNotExists(String roleName) {
+        Optional<Role> role = roleRepository.findByName(roleName);
+        if (role.isEmpty()) {
+            roleRepository.save(new Role(roleName));
         }
     }
 }

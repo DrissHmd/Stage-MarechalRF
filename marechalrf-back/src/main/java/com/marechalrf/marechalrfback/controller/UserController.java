@@ -1,18 +1,19 @@
 package com.marechalrf.marechalrfback.controller;
 
-import com.marechalrf.marechalrfback.model.User;
+import com.marechalrf.marechalrfback.dto.UserDto;
+import com.marechalrf.marechalrfback.dto.response.Response;
 import com.marechalrf.marechalrfback.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,42 +24,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<UserDto>> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        Callable<UserDto> f = () -> userService.updateUser(id, userDto);
+        return ResponseController.createResponseEntity(f, LOGGER, null);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Response<List<UserDto>>> listUsers() {
+        Callable<List<UserDto>> f = () -> userService.getAllUsers();
+        return ResponseController.createResponseEntity(f, LOGGER, new ArrayList<>());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        return ResponseEntity.ok(user);
+    public ResponseEntity<Response<UserDto>> getUser(@PathVariable Long id) {
+        Callable<UserDto> f = () -> {
+            Optional<UserDto> userOptional = userService.getUserById(id);
+            if (userOptional.isPresent()) {
+                return userOptional.get();
+            } else {
+                throw new RuntimeException("User not found");
+            }
+        };
+        return ResponseController.createResponseEntity(f, LOGGER, null);
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            String username = ((UserDetails) principal).getUsername();
-            Optional<User> user = userService.getUserByUsername(username);
-            return ResponseEntity.of(user);
-        }
-        return ResponseEntity.badRequest().body("User not found");
-    }
-
-    @PostMapping
-    public ResponseEntity<ReponseModel> createUser(@Validated @RequestBody User user) {
-        return userService.createUser(user);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @Validated @RequestBody User userDetails) {
-        User updatedUser = userService.updateUser(id, userDetails);
-        return ResponseEntity.ok(updatedUser);
+    @PostMapping("")
+    public ResponseEntity<Response<UserDto>> saveUser(@RequestBody UserDto userDto) {
+        Callable<UserDto> f = () -> userService.createUser(userDto);
+        return ResponseController.createResponseEntity(f, LOGGER, null);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Response<Void>> deleteUser(@PathVariable Long id) {
+        Callable<Void> f = () -> {
+            userService.deleteUser(id);
+            return null;
+        };
+        return ResponseController.createResponseEntity(f, LOGGER, null);
     }
 }
