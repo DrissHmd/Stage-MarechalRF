@@ -2,6 +2,7 @@ package com.marechalrf.marechalrfback.dto.mapper;
 
 import com.marechalrf.marechalrfback.dto.RoleUserDto;
 import com.marechalrf.marechalrfback.model.RoleUser;
+import com.marechalrf.marechalrfback.model.UserRoleKey;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueMappingStrategy;
@@ -22,4 +23,20 @@ public interface RoleUserMapper {
     RoleUser dtoToEntity(RoleUserDto roleUserDto);
 
     List<RoleUser> dtoToEntityList(List<RoleUserDto> roleUserDtos);
+
+    default UserRoleKey map(Long userId, Long roleId) {
+        return new UserRoleKey(userId, roleId);
+    }
+
+    default Long mapUserRoleKeyToUserId(UserRoleKey value) {
+        return value != null ? value.getUserId() : null;
+    }
+
+    default UserRoleKey mapToUserRoleKey(Long userId, Long roleId) {
+        return new UserRoleKey(userId, roleId);
+    }
+
+    default UserRoleKey map(Long id) {
+        return new UserRoleKey(id, null); // Adjust as necessary
+    }
 }

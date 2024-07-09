@@ -21,7 +21,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void addRoleIfNotExists(String roleName) {
-        Optional<Role> role = roleRepository.findByName(roleName);
+        Optional<Role> role = Optional.ofNullable(roleRepository.findByName(roleName));
         if (role.isEmpty()) {
             roleRepository.save(new Role(roleName));
         }

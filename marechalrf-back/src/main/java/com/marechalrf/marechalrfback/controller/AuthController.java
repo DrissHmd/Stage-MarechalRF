@@ -2,15 +2,17 @@ package com.marechalrf.marechalrfback.controller;
 
 import com.marechalrf.marechalrfback.dto.UserDto;
 import com.marechalrf.marechalrfback.model.Role;
-import com.marechalrf.marechalrfback.model.User;
 import com.marechalrf.marechalrfback.payload.LoginRequest;
 import com.marechalrf.marechalrfback.service.UserService;
 import com.marechalrf.marechalrfback.repository.RoleRepository;
 import com.marechalrf.marechalrfback.util.JwtUtil;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -33,6 +35,8 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
         Optional<UserDto> existingUser = userService.getUserByUsername(userDto.getUsername());
@@ -42,7 +46,6 @@ public class AuthController {
 
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-        // Attribuer des rôles par défaut
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName("ROLE_USER");
         roles.add(userRole);
@@ -54,12 +57,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
+        logger.info("Login attempt for user: { "+ loginRequest.getUsername()+ " }");
         Optional<UserDto> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
         if (optionalUser.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), optionalUser.get().getPassword())) {
             String token = jwtUtil.generateToken(loginRequest.getUsername());
+            logger.info("Login successful for user: { "+ loginRequest.getUsername()+ " }");
             return ResponseEntity.ok(Map.of("token", token, "role", optionalUser.get().getRoles(), "message", "Login successful!"));
         }
 
+        logger.info("Login failed for user: { "+ loginRequest.getUsername()+ " }");
         return ResponseEntity.badRequest().body("Invalid username or password!");
     }
 }

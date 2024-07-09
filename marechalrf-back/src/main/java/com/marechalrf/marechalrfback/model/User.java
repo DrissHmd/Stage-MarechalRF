@@ -52,6 +52,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+
+
     @PrePersist
     @PreUpdate
     private void encodePassword() {
