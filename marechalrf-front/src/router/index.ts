@@ -42,7 +42,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true, require: "ROLE_ADMIN" }
   }
 ];
 
@@ -52,7 +52,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(`Navigating to ${to.path}`);
   if (to.matched.some(record => record.meta.requiresAuth)) {
       const token = localStorage.getItem('token');
       console.log(`Token found: ${token}`);
@@ -60,9 +59,9 @@ router.beforeEach((to, from, next) => {
           console.log(`No token found, redirecting to /login`);
           next({ path: '/login' });
       } else {
-          const userRole = localStorage.getItem('role');
+          const userRole = localStorage.getItem('role')?.split("\"",6).pop();
           console.log(`User role: ${userRole}`);
-          if (to.matched.some(record => record.meta.requiresAdmin) && userRole !== 'ADMIN') {
+          if (to.matched.some(record => record.meta.requiresAdmin) && userRole !== 'ROLE_ADMIN') {
               console.log(`User is not admin, redirecting to /`);
               next({ path: '/' });
           } else {

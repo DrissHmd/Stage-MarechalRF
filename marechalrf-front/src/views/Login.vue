@@ -39,9 +39,21 @@ export default defineComponent({
           username: username.value,
           password: password.value,
         });
+
         const { token, role } = response.data;
+        console.log(response.data);
+
         localStorage.setItem('token', token);
-        localStorage.setItem('role', role);
+        console.log(token);
+        if (role.length > 0) {
+          localStorage.setItem('role', JSON.stringify(role[0]));
+          console.log(role[0]);
+        } else {
+          console.error('No roles found for the user.');
+          errorMessage.value = 'Aucun rôle trouvé pour cet utilisateur';
+          return;
+        }
+
         console.log('Login successful:', response.data.token);
         errorMessage.value = "";
         router.push('/');
