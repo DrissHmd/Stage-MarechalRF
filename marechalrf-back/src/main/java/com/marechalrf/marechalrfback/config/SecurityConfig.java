@@ -21,6 +21,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/contact").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->

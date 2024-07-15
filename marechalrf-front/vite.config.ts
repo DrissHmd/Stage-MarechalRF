@@ -10,6 +10,7 @@ export default defineConfig({
     vue(),
     VueDevTools(),
   ],
+  server: {proxy: {'/send-email': {target: 'http://localhost:3000', changeOrigin: true,},},},
   define: {
     'process.env': process.env
   },

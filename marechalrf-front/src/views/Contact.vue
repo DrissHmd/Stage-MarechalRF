@@ -1,29 +1,100 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <div class="contact-page">
     <div class="background-static"></div>
     <div class="contact-container">
-      <GoogleFormConsent 
-        formUrl="https://docs.google.com/forms/d/e/1FAIpQLSemTDgjSGXwg75YfA7N4rYWyTYBw7w_STNni-4HNVZvzG7Z6A/viewform?embedded=true"
-        height="300"
-      />
-      <GoogleMapConsent />
+      <form @submit.prevent="submitForm">
+        <div class="form-group">
+          <label for="nom">Nom:</label>
+          <input type="text" id="nom" v-model="formData.nom" required />
+        </div>
+        <div class="form-group">
+          <label for="prenom">Prénom:</label>
+          <input type="text" id="prenom" v-model="formData.prenom" required />
+        </div>
+        <div class="form-group">
+          <label for="entreprise">Entreprise:</label>
+          <input type="text" id="entreprise" v-model="formData.entreprise" required />
+        </div>
+        <div class="form-group">
+          <label for="fonction">Fonction:</label>
+          <input type="text" id="fonction" v-model="formData.fonction" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Adresse mail:</label>
+          <input type="email" id="email" v-model="formData.email" required />
+        </div>
+        <div class="form-group">
+          <label for="telephone">Numéro de téléphone:</label>
+          <input type="tel" id="telephone" v-model="formData.telephone" />
+        </div>
+        <div class="form-group">
+          <label for="message">Message:</label>
+          <textarea id="message" v-model="formData.message"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="consent">
+            Mentions légales:
+            <input type="checkbox" id="consent" v-model="formData.consent" required />
+            En cochant la case ci-dessous, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis d'assurance, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données
+          </label>
+        </div>
+        <button type="submit">Envoyer</button>
+      </form>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import GoogleFormConsent from './GoogleFormContactConsent.vue';
-import GoogleMapConsent from './GoogleMapConsent.vue';
-
+<script>
 export default {
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "Contact",
-  components: {
-    GoogleFormConsent,
-    GoogleMapConsent
+  data() {
+    return {
+      formData: {
+        nom: "",
+        prenom: "",
+        entreprise: "",
+        fonction: "",
+        email: "",
+        telephone: "",
+        message: "",
+        consent: false
+      }
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        const response = await fetch('http://localhost:8080/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.formData)
+        });
+        if (!response.ok) {
+          throw new Error('Erreur lors de l\'envoi du formulaire');
+        }
+        alert('Message envoyé avec succès');
+        // Réinitialiser le formulaire après l'envoi
+        this.formData = {
+          nom: '',
+          prenom: '',
+          entreprise: '',
+          fonction: '',
+          email: '',
+          telephone: '',
+          message: '',
+          consent: false
+        };
+      } catch (error) {
+        console.error(error);
+        alert('Erreur lors de l\'envoi du message');
+      }
+    }
   }
 };
 </script>
+
 
 <style scoped>
 .contact-page {
@@ -59,14 +130,38 @@ export default {
   z-index: 1;
 }
 
-.map-container {
-  margin-top: 2rem;
+.form-group {
+  margin-bottom: 1rem;
 }
 
-.map-container iframe {
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea {
   width: 100%;
-  border: 0;
-  border-radius: 8px;
-  height: 300px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.response-message {
+  margin-top: 1rem;
+  color: green;
 }
 </style>
