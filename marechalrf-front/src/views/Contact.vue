@@ -69,11 +69,14 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(this.formData)
+          body: JSON.stringify(this.formData),
+          credentials: 'include',
         });
         if (!response.ok) {
           throw new Error('Erreur lors de l\'envoi du formulaire');
         }
+        const data = await response.json();
+        console.log('Contact form submitted successfully:', data);
         alert('Message envoyé avec succès');
         // Réinitialiser le formulaire après l'envoi
         this.formData = {

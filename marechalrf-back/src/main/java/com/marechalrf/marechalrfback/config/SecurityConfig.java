@@ -29,7 +29,9 @@ public class SecurityConfig {
                                 .loginPage("/login")
                                 .defaultSuccessUrl("/", true)
                                 .permitAll()
-                );
+                )
+
+        ;
 
         return http.build();
     }
