@@ -4,12 +4,12 @@
       <h1>Inscription</h1>
       <form @submit.prevent="register">
         <div class="form-group">
-          <label for="firstName">Prénom</label>
-          <input type="text" id="firstName" v-model="firstName" required />
+          <label for="first_name">Prénom</label>
+          <input type="text" id="first_name" v-model="first_name" required />
         </div>
         <div class="form-group">
-          <label for="lastName">Nom</label>
-          <input type="text" id="lastName" v-model="lastName" required />
+          <label for="last_name">Nom</label>
+          <input type="text" id="last_name" v-model="last_name" required />
         </div>
         <div class="form-group">
           <label for="email">Email</label>
@@ -43,8 +43,8 @@ export default defineComponent({
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Register',
   setup() {
-    const firstName = ref('');
-    const lastName = ref('');
+    const first_name = ref('');
+    const last_name = ref('');
     const email = ref('');
     const phone = ref('');
     const username = ref('');
@@ -54,8 +54,8 @@ export default defineComponent({
     const register = async () => {
       try {
         const response = await axios.post('http://localhost:8080/api/auth/register', {
-          firstName: firstName.value,
-          lastName: lastName.value,
+          first_name: first_name.value,
+          last_name: last_name.value,
           email: email.value,
           phone: phone.value,
           username: username.value,
@@ -76,8 +76,8 @@ export default defineComponent({
     };
 
     return {
-      firstName,
-      lastName,
+      first_name,
+      last_name,
       email,
       phone,
       username,

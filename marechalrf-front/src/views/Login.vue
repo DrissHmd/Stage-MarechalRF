@@ -41,10 +41,10 @@ export default defineComponent({
         });
 
         const { token, role } = response.data;
-        console.log(response.data);
+        console.log("response.data : " + response.data);
 
         localStorage.setItem('token', token);
-        console.log(token);
+        console.log("token : " + token);
         if (role.length > 0) {
           localStorage.setItem('role', JSON.stringify(role[0]));
           console.log(role[0]);
