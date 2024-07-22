@@ -18,9 +18,8 @@ import lombok.experimental.Accessors;
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto implements Serializable {
-    private Integer id;
-    private String firstname;
-    private String lastname;
+    private String first_name;
+    private String last_name;
     private String email;
     private String phone;
     private String username;

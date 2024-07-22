@@ -22,11 +22,11 @@ public class User {
 
     @NotBlank
     @Column(name = "first_name", nullable = false)
-    private String firstName;
+    private String first_name;
 
     @NotBlank
     @Column(name = "last_name", nullable = false)
-    private String lastName;
+    private String last_name;
 
     @NotBlank
     @Column(name = "email", nullable = false)

@@ -41,20 +41,15 @@ export default defineComponent({
         });
 
         const { token, role } = response.data;
-        console.log("response.data : " + response.data);
 
         localStorage.setItem('token', token);
-        console.log("token : " + token);
         if (role.length > 0) {
-          localStorage.setItem('role', JSON.stringify(role[0]));
-          console.log(role[0]);
+          localStorage.setItem('role', JSON.stringify(role[0].name));
         } else {
-          console.error('No roles found for the user.');
           errorMessage.value = 'Aucun rôle trouvé pour cet utilisateur';
           return;
         }
 
-        console.log('Login successful:', response.data.token);
         errorMessage.value = "";
         router.push('/');
       } catch (error) {

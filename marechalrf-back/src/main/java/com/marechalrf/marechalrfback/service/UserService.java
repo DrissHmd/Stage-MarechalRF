@@ -12,8 +12,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
@@ -44,16 +49,22 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto userDto) {
+        logger.info("Creating user with username: {}", userDto.getUsername());
         User user = userMapper.dtoToEntity(userDto);
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        String rawPassword = userDto.getPassword();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        logger.info("Raw password: {}", rawPassword);
+        logger.info("Encoded password: {}", encodedPassword);
+
+        user.setPassword(encodedPassword);
         User savedUser = userRepository.save(user);
         return userMapper.entityToDTO(savedUser);
     }
 
     public UserDto updateUser(Long id, UserDto userDetails) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        user.setFirstName(userDetails.getFirstname());
-        user.setLastName(userDetails.getLastname());
+        user.setFirst_name(userDetails.getFirst_name());
+        user.setLast_name(userDetails.getLast_name());
         user.setEmail(userDetails.getEmail());
         user.setPhone(userDetails.getPhone());
         user.setUsername(userDetails.getUsername());

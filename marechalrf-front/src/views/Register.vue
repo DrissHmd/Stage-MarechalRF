@@ -69,7 +69,7 @@ export default defineComponent({
 
         // Si l'inscription est réussie, enregistrez les informations de session et redirigez
         localStorage.setItem('token', response.data.token);
-        router.push('/dashboard');
+        router.push('/');
       } catch (error: any) {
         console.error('Registration failed:', error);
       }

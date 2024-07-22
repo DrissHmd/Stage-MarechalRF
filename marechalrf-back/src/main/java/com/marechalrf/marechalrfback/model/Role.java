@@ -1,5 +1,6 @@
 package com.marechalrf.marechalrfback.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class Role {
     private String name;
 
     @ManyToMany(mappedBy = "roles")
-    @Column(name = "rule")
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
     public Role(String name) {

@@ -20,8 +20,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/contact").permitAll()
+                                .requestMatchers("/api/auth/**", "/api/contact").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->
@@ -30,8 +29,12 @@ public class SecurityConfig {
                                 .defaultSuccessUrl("/", true)
                                 .permitAll()
                 )
-
-        ;
+                .logout(logout ->
+                        logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login?logout")
+                                .permitAll()
+                );
 
         return http.build();
     }
