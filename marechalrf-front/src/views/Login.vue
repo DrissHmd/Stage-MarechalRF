@@ -38,6 +38,10 @@ export default defineComponent({
         const response = await axios.post('http://localhost:8080/api/auth/login', {
           username: username.value,
           password: password.value,
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
 
         const { token, role } = response.data;

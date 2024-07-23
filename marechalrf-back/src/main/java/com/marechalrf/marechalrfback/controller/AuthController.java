@@ -77,6 +77,11 @@ public class AuthController {
                 logger.info("Password match for user: {}", optionalUser.get().getUsername());
                 String token = jwtUtil.generateToken(loginRequest.getUsername());
                 logger.info("Token generated: {}", token);
+                if (optionalUser.get().getRoles() != null) {
+                    optionalUser.get().getRoles().forEach(role -> logger.info("User role: id={}, name={}", role.getId(), role.getName()));
+                } else {
+                    logger.info("User has no roles assigned.");
+                }
                 return ResponseEntity.ok(Map.of("token", token, "role", optionalUser.get().getRoles(), "message", "Login successful!"));
             } else {
                 logger.warn("Password mismatch for user: {}", optionalUser.get().getUsername());
