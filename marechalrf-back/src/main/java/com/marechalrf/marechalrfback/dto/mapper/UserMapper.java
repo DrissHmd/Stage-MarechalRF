@@ -14,11 +14,7 @@ public interface UserMapper {
     @Mapping(source = "last_name", target = "last_name")
     UserDto entityToDTO(User model);
 
-    List<UserDto> entityToDTOList(List<User> model);
-
     @Mapping(source = "first_name", target = "first_name")
     @Mapping(source = "last_name", target = "last_name")
     User dtoToEntity(UserDto model);
-
-    List<User> dtoToEntityList(List<UserDto> model);
 }

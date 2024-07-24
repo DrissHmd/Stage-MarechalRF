@@ -44,8 +44,6 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Username is already taken!");
         }
 
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName("ROLE_USER");
         if (userRole == null) {
@@ -71,7 +69,14 @@ public class AuthController {
             String encodedPassword = optionalUser.get().getPassword();
 
             logger.info("Raw password: {}", rawPassword);
-            logger.info("Encoded password: {}", encodedPassword);
+            logger.info("Encoded password: {}", passwordEncoder.encode(rawPassword));
+            logger.info("Encoded password bdd: {}", encodedPassword);
+            logger.info("Double Encoded password: {}", passwordEncoder.encode(passwordEncoder.encode(rawPassword)));
+            logger.info("Double Encoded password bdd: {}", passwordEncoder.encode(encodedPassword));
+
+            if (passwordEncoder.matches(passwordEncoder.encode(rawPassword), encodedPassword)) {
+                logger.info("Its THAT probleme!");
+            }
 
             if (passwordEncoder.matches(rawPassword, encodedPassword)) {
                 logger.info("Password match for user: {}", optionalUser.get().getUsername());

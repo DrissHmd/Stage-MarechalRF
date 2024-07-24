@@ -51,13 +51,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
-
-
-
-    @PrePersist
-    @PreUpdate
-    private void encodePassword() {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        this.password = passwordEncoder.encode(this.password);
-    }
 }

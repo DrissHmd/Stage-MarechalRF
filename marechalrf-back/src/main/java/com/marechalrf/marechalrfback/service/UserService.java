@@ -55,6 +55,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         logger.info("Raw password: {}", rawPassword);
         logger.info("Encoded password: {}", encodedPassword);
+        logger.info("Double Encoded password: {}", passwordEncoder.encode(encodedPassword));
 
         user.setPassword(encodedPassword);
         User savedUser = userRepository.save(user);
