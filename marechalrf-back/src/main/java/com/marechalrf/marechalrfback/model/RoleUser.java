@@ -24,6 +24,4 @@ public class RoleUser {
     private Role role;
 
     private LocalDate assignedDate;
-
-    // Getters and Setters
 }

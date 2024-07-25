@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useRouter } from 'vue-router';
 
 export default defineComponent({
@@ -57,8 +57,18 @@ export default defineComponent({
         errorMessage.value = "";
         router.push('/');
       } catch (error) {
-        console.error('Login failed:', error);
-        errorMessage.value = 'Identifiant ou Mot de passe incorrect';
+        const axiosError = error as AxiosError;
+        if (axiosError.response) {
+          if (axiosError.response.status === 401) {
+            errorMessage.value = 'Identifiant ou mot de passe incorrect';
+          } else if (axiosError.response.status === 404) {
+            errorMessage.value = "L'utilisateur n'existe pas";
+          } else {
+            errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+          }
+        } else {
+          errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+        }
       }
     };
 

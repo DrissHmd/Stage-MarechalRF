@@ -1,6 +1,8 @@
 package com.marechalrf.marechalrfback.controller;
 
 import com.marechalrf.marechalrfback.dto.UserDto;
+import com.marechalrf.marechalrfback.exception.InvalidCredentialsException;
+import com.marechalrf.marechalrfback.exception.UserNotFoundException;
 import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.payload.LoginRequest;
 import com.marechalrf.marechalrfback.service.UserService;
@@ -14,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -39,63 +38,64 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
-        Optional<UserDto> existingUser = userService.getUserByUsername(userDto.getUsername());
-        if (existingUser.isPresent()) {
-            return ResponseEntity.badRequest().body("Username is already taken!");
+        try {
+            Optional<UserDto> existingUser = userService.getUserByUsername(userDto.getUsername());
+
+            if (existingUser.isPresent()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
+            }
+
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+            Set<Role> roles = new HashSet<>();
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            if (userRole == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Default role not found!");
+            }
+            roles.add(userRole);
+            userDto.setRoles(roles);
+
+            UserDto createdUser = userService.createUser(userDto);
+            String token = jwtUtil.generateToken(createdUser.getUsername());
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("user", createdUser);
+            response.put("token", token);
+            response.put("message", "User registered successfully!");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during registration");
         }
-
-        Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository.findByName("ROLE_USER");
-        if (userRole == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Default role not found!");
-        }
-        roles.add(userRole);
-        userDto.setRoles(roles);
-
-        UserDto createdUser = userService.createUser(userDto);
-        String token = jwtUtil.generateToken(createdUser.getUsername());
-
-        return ResponseEntity.ok(Map.of("user", createdUser, "token", token, "message", "User registered successfully!"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody LoginRequest loginRequest) {
-        logger.info("Login attempt for user: {}", loginRequest.getUsername());
-        Optional<UserDto> optionalUser = userService.getUserByUsername(loginRequest.getUsername());
-        if (optionalUser.isPresent()) {
-            logger.info("User found: {}", optionalUser.get().getUsername());
+    public ResponseEntity<?> login(@RequestBody UserDto userDto) {
+        try {
+            Optional<UserDto> optionalUser = userService.getUserByUsername(userDto.getUsername());
 
-            String rawPassword = loginRequest.getPassword();
-            String encodedPassword = optionalUser.get().getPassword();
-
-            logger.info("Raw password: {}", rawPassword);
-            logger.info("Encoded password: {}", passwordEncoder.encode(rawPassword));
-            logger.info("Encoded password bdd: {}", encodedPassword);
-            logger.info("Double Encoded password: {}", passwordEncoder.encode(passwordEncoder.encode(rawPassword)));
-            logger.info("Double Encoded password bdd: {}", passwordEncoder.encode(encodedPassword));
-
-            if (passwordEncoder.matches(passwordEncoder.encode(rawPassword), encodedPassword)) {
-                logger.info("Its THAT probleme!");
+            if (optionalUser.isEmpty()) {
+                throw new UserNotFoundException("User not found");
             }
 
-            if (passwordEncoder.matches(rawPassword, encodedPassword)) {
-                logger.info("Password match for user: {}", optionalUser.get().getUsername());
-                String token = jwtUtil.generateToken(loginRequest.getUsername());
-                logger.info("Token generated: {}", token);
-                if (optionalUser.get().getRoles() != null) {
-                    optionalUser.get().getRoles().forEach(role -> logger.info("User role: id={}, name={}", role.getId(), role.getName()));
-                } else {
-                    logger.info("User has no roles assigned.");
-                }
-                return ResponseEntity.ok(Map.of("token", token, "role", optionalUser.get().getRoles(), "message", "Login successful!"));
-            } else {
-                logger.warn("Password mismatch for user: {}", optionalUser.get().getUsername());
+            UserDto user = optionalUser.get();
+
+            if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
+                throw new InvalidCredentialsException("Invalid username or password");
             }
-        } else {
-            logger.warn("User not found: {}", loginRequest.getUsername());
+
+            String token = jwtUtil.generateToken(user.getUsername());
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("message", "Login successful");
+
+            return ResponseEntity.ok(response);
+        } catch (UserNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (InvalidCredentialsException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
         }
-
-        logger.info("Login failed for user: {}", loginRequest.getUsername());
-        return ResponseEntity.badRequest().body("Invalid username or password!");
     }
 }

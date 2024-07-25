@@ -1,14 +1,10 @@
 package com.marechalrf.marechalrfback.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -24,10 +20,6 @@ public class Role {
     @NotBlank
     @Column(name = "name")
     private String name;
-
-    @ManyToMany(mappedBy = "roles")
-    @JsonBackReference
-    private Set<User> users = new HashSet<>();
 
     public Role(String name) {
         this.name = name;

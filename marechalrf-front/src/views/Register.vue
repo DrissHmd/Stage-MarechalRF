@@ -27,6 +27,7 @@
           <label for="password">Mot de passe</label>
           <input type="password" id="password" v-model="password" required />
         </div>
+        <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
         <button type="submit" class="register-button">S'inscrire</button>
       </form>
       <router-link to="/login" class="login-link">Déjà un compte ? Connectez-vous ici</router-link>
@@ -50,6 +51,7 @@ export default defineComponent({
     const username = ref('');
     const password = ref('');
     const router = useRouter();
+    const errorMessage = ref('');
 
     const register = async () => {
       try {
@@ -65,13 +67,20 @@ export default defineComponent({
             'Content-Type': 'application/json'
           }
         });
-        console.log('Registration successful:', response.data);
 
-        // Si l'inscription est réussie, enregistrez les informations de session et redirigez
+        console.log('Registration successful:', response.data);
         localStorage.setItem('token', response.data.token);
         router.push('/');
-      } catch (error: any) {
-        console.error('Registration failed:', error);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          if (error.response && error.response.status === 400) {
+            errorMessage.value = error.response.data as string;
+          } else {
+            errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+          }
+        } else {
+          errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+        }
       }
     };
 
@@ -82,7 +91,8 @@ export default defineComponent({
       phone,
       username,
       password,
-      register
+      register,
+      errorMessage
     };
   }
 });
