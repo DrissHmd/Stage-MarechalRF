@@ -51,13 +51,6 @@ public class UserService {
     public UserDto createUser(UserDto userDto) {
         logger.info("Creating user with username: {}", userDto.getUsername());
         User user = userMapper.dtoToEntity(userDto);
-        String rawPassword = userDto.getPassword();
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-        logger.info("Raw password: {}", rawPassword);
-        logger.info("Encoded password: {}", encodedPassword);
-        logger.info("Double Encoded password: {}", passwordEncoder.encode(encodedPassword));
-
-        user.setPassword(encodedPassword);
         User savedUser = userRepository.save(user);
         return userMapper.entityToDTO(savedUser);
     }

@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +23,9 @@ public class Role {
     @NotBlank
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<User> users = new HashSet<>();
 
     public Role(String name) {
         this.name = name;

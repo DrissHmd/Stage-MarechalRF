@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @RestController
@@ -47,13 +48,13 @@ public class AuthController {
 
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
-            Set<Role> roles = new HashSet<>();
+            // Find the role and set it
             Role userRole = roleRepository.findByName("ROLE_USER");
             if (userRole == null) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Default role not found!");
             }
-            roles.add(userRole);
-            userDto.setRoles(roles);
+            userDto.setRoleId(userRole.getId());
+            userDto.setAssignedDate(LocalDate.now());
 
             UserDto createdUser = userService.createUser(userDto);
             String token = jwtUtil.generateToken(createdUser.getUsername());

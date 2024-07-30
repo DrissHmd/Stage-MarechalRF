@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -40,4 +44,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "assigned_date", nullable = false)
+    private LocalDate assigned_date;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 }
