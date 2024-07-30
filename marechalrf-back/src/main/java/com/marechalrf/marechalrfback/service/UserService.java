@@ -50,6 +50,7 @@ public class UserService {
 
     public UserDto createUser(UserDto userDto) {
         logger.info("Creating user with username: {}", userDto.getUsername());
+        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = userMapper.dtoToEntity(userDto);
         User savedUser = userRepository.save(user);
         return userMapper.entityToDTO(savedUser);
@@ -65,6 +66,8 @@ public class UserService {
         if (!userDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
+        user.setRoleId(userDetails.getRoleId());
+        user.setAssignedDate(userDetails.getAssignedDate());
         User updatedUser = userRepository.save(user);
         return userMapper.entityToDTO(updatedUser);
     }
