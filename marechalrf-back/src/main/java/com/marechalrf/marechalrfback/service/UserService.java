@@ -2,7 +2,9 @@ package com.marechalrf.marechalrfback.service;
 
 import com.marechalrf.marechalrfback.dto.UserDto;
 import com.marechalrf.marechalrfback.dto.mapper.UserMapper;
+import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
+import com.marechalrf.marechalrfback.repository.RoleRepository;
 import com.marechalrf.marechalrfback.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,12 +24,14 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserMapper userMapper, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserMapper userMapper, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -66,8 +70,11 @@ public class UserService {
         if (!userDetails.getPassword().isEmpty()) {
             user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
-        user.setRoleId(userDetails.getRoleId());
-        user.setAssignedDate(userDetails.getAssignedDate());
+        if (userDetails.getRoleId() != null) {
+            Role role = roleRepository.findById(userDetails.getRoleId()).orElseThrow(() -> new RuntimeException("Role not found"));
+            user.setRole(role);
+            user.setAssigned_date(userDetails.getAssignedDate());
+        }
         User updatedUser = userRepository.save(user);
         return userMapper.entityToDTO(updatedUser);
     }
