@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -56,6 +57,8 @@ public class UserService {
         logger.info("Creating user with username: {}", userDto.getUsername());
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = userMapper.dtoToEntity(userDto);
+        user.setAssigned_date(LocalDate.now());
+        user.setRoleId(roleRepository.findByName("ROLE_USER").getId());
         User savedUser = userRepository.save(user);
         return userMapper.entityToDTO(savedUser);
     }
@@ -72,7 +75,7 @@ public class UserService {
         }
         if (userDetails.getRoleId() != null) {
             Role role = roleRepository.findById(userDetails.getRoleId()).orElseThrow(() -> new RuntimeException("Role not found"));
-            user.setRole(role);
+            user.setRoleId(role.getId());
             user.setAssigned_date(userDetails.getAssignedDate());
         }
         User updatedUser = userRepository.save(user);

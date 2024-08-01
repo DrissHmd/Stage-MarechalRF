@@ -2,6 +2,7 @@ package com.marechalrf.marechalrfback.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,10 +43,11 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @NotNull
     @Column(name = "assigned_date", nullable = false)
-    private LocalDate assigned_date;
+    private LocalDate assigned_date = LocalDate.now();
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @NotNull
+    @Column(name = "role_id", nullable = false)
+    private Long roleId;
 }
