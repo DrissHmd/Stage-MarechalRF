@@ -48,6 +48,7 @@ public class User {
     private LocalDate assigned_date = LocalDate.now();
 
     @NotNull
-    @Column(name = "role_id", nullable = false)
-    private Long roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 }

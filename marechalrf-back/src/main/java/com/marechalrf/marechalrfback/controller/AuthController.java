@@ -46,8 +46,6 @@ public class AuthController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken!");
             }
 
-            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
             // Find the role and set it
             Role userRole = roleRepository.findByName("ROLE_USER");
             if (userRole == null) {
@@ -88,6 +86,7 @@ public class AuthController {
             String token = jwtUtil.generateToken(user.getUsername());
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
+            response.put("role", user.getRoleId());
             response.put("message", "Login successful");
 
             return ResponseEntity.ok(response);

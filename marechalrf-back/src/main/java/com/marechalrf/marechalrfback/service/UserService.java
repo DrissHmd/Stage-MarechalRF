@@ -38,7 +38,15 @@ public class UserService {
 
     public Optional<UserDto> getUserByUsername(String username) {
         return userRepository.findByUsername(username)
-                .map(userMapper::entityToDTO);
+                .map(user -> {
+                    logger.info("Role for user {}: {}", username, user.getRole().getName());
+                    return user;
+                })
+                .map(userMapper::entityToDTO)
+                .map(userDto -> {
+                    logger.info("Role ID for user {}: {}", username, userDto.getRoleId());
+                    return userDto;
+                });
     }
 
     public List<UserDto> getAllUsers() {
@@ -55,10 +63,12 @@ public class UserService {
 
     public UserDto createUser(UserDto userDto) {
         logger.info("Creating user with username: {}", userDto.getUsername());
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User user = userMapper.dtoToEntity(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setAssigned_date(LocalDate.now());
-        user.setRoleId(roleRepository.findByName("ROLE_USER").getId());
+        Role role = roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.setRole(role);
         User savedUser = userRepository.save(user);
         return userMapper.entityToDTO(savedUser);
     }
@@ -70,13 +80,11 @@ public class UserService {
         user.setEmail(userDetails.getEmail());
         user.setPhone(userDetails.getPhone());
         user.setUsername(userDetails.getUsername());
-        if (!userDetails.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
-        }
+        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         if (userDetails.getRoleId() != null) {
-            Role role = roleRepository.findById(userDetails.getRoleId()).orElseThrow(() -> new RuntimeException("Role not found"));
-            user.setRoleId(role.getId());
-            user.setAssigned_date(userDetails.getAssignedDate());
+            Role role = roleRepository.findById(userDetails.getRoleId())
+                    .orElseThrow(() -> new RuntimeException("Role not found"));
+            user.setRole(role);
         }
         User updatedUser = userRepository.save(user);
         return userMapper.entityToDTO(updatedUser);

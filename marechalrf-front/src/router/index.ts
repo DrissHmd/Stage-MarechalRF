@@ -42,7 +42,7 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true, require: "ROLE_ADMIN" }
+    meta: { requiresAuth: true, requiresAdmin: true }
   }
 ];
 
@@ -59,14 +59,14 @@ router.beforeEach((to, from, next) => {
           console.log(`No token found, redirecting to /login`);
           next({ path: '/login' });
       } else {
-          const userRole = localStorage.getItem('role')?.split("\"",6).pop();
-          console.log(`User role: ${userRole}`);
-          if (to.matched.some(record => record.meta.requiresAdmin) && userRole !== 'ROLE_ADMIN') {
-              console.log(`User is not admin, redirecting to /`);
-              next({ path: '/' });
-          } else {
-              next();
-          }
+        const roleId = parseInt(localStorage.getItem('roleId') || '0', 10);
+        console.log(`User role ID: ${roleId}`);
+        if (to.matched.some(record => record.meta.requiresAdmin) && roleId !== 2) {
+          console.log(`User is not admin, redirecting to /`);
+          next({ path: '/' });
+        } else {
+          next();
+        }
       }
   } else {
       next();

@@ -8,11 +8,9 @@ import org.mapstruct.NullValueMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL)
 public interface UserMapper {
-    @Mapping(source = "first_name", target = "first_name")
-    @Mapping(source = "last_name", target = "last_name")
+    @Mapping(source = "role.id", target = "roleId")
     UserDto entityToDTO(User model);
 
-    @Mapping(source = "first_name", target = "first_name")
-    @Mapping(source = "last_name", target = "last_name")
+    @Mapping(source = "roleId", target = "role.id")
     User dtoToEntity(UserDto model);
 }

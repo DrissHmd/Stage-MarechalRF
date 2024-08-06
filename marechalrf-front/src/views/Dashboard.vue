@@ -29,8 +29,8 @@ export default defineComponent({
 
     const fetchUserData = () => {
       const token = localStorage.getItem('token');
-      const role = localStorage.getItem('role');
-      const userRole = role?.split("\"",6).pop();
+      const roleId = parseInt(localStorage.getItem('roleId') || '0', 10);
+      console.log(roleId);
 
       if (!token) {
         console.log('No token found, redirecting to login...');
@@ -38,7 +38,7 @@ export default defineComponent({
         return;
       }
 
-      if (userRole !== 'ROLE_ADMIN') {
+      if (roleId !== 2) {
         console.log('Access restricted, redirecting to home...');
         router.push('/');
         return;
@@ -47,7 +47,7 @@ export default defineComponent({
       user.value = {
         name: 'Nom utilisateur', 
         email: 'email@example.com', 
-        role: userRole
+        role: roleId.toString()
       };
     };
 

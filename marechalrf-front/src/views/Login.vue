@@ -35,6 +35,8 @@ export default defineComponent({
 
     const login = async () => {
       try {
+        console.log('Login attempt:', { username: username.value, password: password.value });
+
         const response = await axios.post('http://localhost:8080/api/auth/login', {
           username: username.value,
           password: password.value,
@@ -45,29 +47,43 @@ export default defineComponent({
         });
 
         const { token, role } = response.data;
+        console.log("Response.data : ", response.data);
+        console.log("Role id : ", role);
 
-        localStorage.setItem('token', token);
-        if (role.length > 0) {
-          localStorage.setItem('role', JSON.stringify(role[0].name));
-        } else {
+        if (!role) {
           errorMessage.value = 'Aucun rôle trouvé pour cet utilisateur';
           return;
         }
 
-        errorMessage.value = "";
-        router.push('/');
+        localStorage.setItem('token', token);
+        localStorage.setItem('roleId', role.toString());
+
+        if (role === 2) {
+          router.push('/dashboard');
+        } else {
+          router.push('/');
+        }
       } catch (error) {
+        console.log('Login error:', error);
+
         const axiosError = error as AxiosError;
         if (axiosError.response) {
+          console.log('Response error data:', axiosError.response.data);
+          console.log('Response error status:', axiosError.response.status);
+
           if (axiosError.response.status === 401) {
             errorMessage.value = 'Identifiant ou mot de passe incorrect';
           } else if (axiosError.response.status === 404) {
             errorMessage.value = "L'utilisateur n'existe pas";
           } else {
-            errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+            errorMessage.value = `Une erreur inattendue est survenue. Veuillez réessayer plus tard. (Status: ${axiosError.response.status})`;
           }
+        } else if (axiosError.request) {
+          console.log('Request error:', axiosError.request);
+          errorMessage.value = 'Aucune réponse du serveur. Veuillez vérifier votre connexion.';
         } else {
-          errorMessage.value = 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.';
+          console.log('General error:', axiosError.message);
+          errorMessage.value = `Une erreur inattendue est survenue. Veuillez réessayer plus tard. (Error: ${axiosError.message})`;
         }
       }
     };
@@ -94,6 +110,8 @@ export default defineComponent({
   }
 });
 </script>
+
+
 
 <style scoped>
 .login-container {
