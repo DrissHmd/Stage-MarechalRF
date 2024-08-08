@@ -5,7 +5,7 @@
         <h3>Coordonnées</h3>
         <p>Adresse: 18 rue du Corbet <br> 01960 ST ANDRE SUR VIEUX JONC</p>
         <p>Téléphone: 04 37 62 64 11</p>
-        <p>Email: contact@marechalrf.com</p>
+        <p>Email: marechalretf@gmail.com</p>
         <div class="map-container">
           <GoogleMapConsent />
         </div>
@@ -22,7 +22,6 @@
           <router-link to="/">Accueil</router-link>
           <router-link to="/about">À propos</router-link>
           <router-link to="/contact">Contact</router-link>
-          <router-link to="/users">Compte</router-link>
         </div>
       </div>
       <div class="footer-section">
