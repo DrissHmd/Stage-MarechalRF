@@ -6,7 +6,7 @@
 
       <!-- Barre de recherche -->
       <div class="search-bar">
-        <input v-model="searchQuery" placeholder="Rechercher un utilisateur par nom" @input="searchUsers" />
+        <input v-model="searchQuery" placeholder="Rechercher un utilisateur par nom" />
       </div>
 
       <!-- Liste des utilisateurs -->
@@ -106,35 +106,45 @@ export default {
   },
   computed: {
     filteredUsers() {
-      return this.users.filter(user => 
+  return Array.isArray(this.users) 
+    ? this.users.filter(user => 
         user.first_name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
         user.last_name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
+      )
+    : [];
     }
   },
   methods: {
     async fetchUsers() {
-      try {
-        const response = await axios.get('/api/users');
-        this.users = response.data;
-      } catch (error) {
-        console.error('Erreur lors de la récupération des utilisateurs', error);
-      }
+  try {
+    const response = await axios.get('/api/users');
+    console.log('Full API Response for Users:', response);
+    if (response.headers['content-type'].includes('application/json')) {
+      this.users = response.data;
+    } else {
+      console.error('La réponse de l\'API utilisateurs n\'est pas du JSON:', response.data);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des utilisateurs', error);
+  }
     },
+
     async fetchRoles() {
       try {
         const response = await axios.get('/api/roles');
-        this.roles = response.data;
+        console.log('API Response for Roles:', response.data);
+        if (Array.isArray(response.data)) {
+          this.roles = response.data;
+        } else {
+          console.error('La réponse de l\'API rôles n\'est pas un tableau.', response.data);
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération des rôles', error);
       }
     },
-    searchUsers() {
-      // La recherche est gérée par computed property filteredUsers
-    },
     editUser(user) {
       this.isEditing = true;
-      this.userForm = { ...user, roleId: user.role.id };
+      this.userForm = { ...user, password: '', roleId: user.roleId };
     },
     async createUser() {
       try {
