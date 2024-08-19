@@ -49,6 +49,17 @@ public class UserController {
         return ResponseController.createResponseEntity(f, LOGGER, null);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<?> getUsersByUsername(@RequestParam String name) {
+        Optional<UserDto> userDto = userService.getUserByUsername(name);
+        if (userDto.isPresent()) {
+            return ResponseEntity.ok(userDto.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Aucun utilisateur trouvé avec le nom d'utilisateur: " + name);
+        }
+    }
+
     @PostMapping("")
     public ResponseEntity<Response<UserDto>> saveUser(@RequestBody UserDto userDto) {
         Callable<UserDto> f = () -> userService.createUser(userDto);

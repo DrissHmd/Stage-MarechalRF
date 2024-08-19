@@ -39,12 +39,12 @@ public class UserService {
     public Optional<UserDto> getUserByUsername(String username) {
         return userRepository.findByUsername(username)
                 .map(user -> {
-                    logger.info("Role for user {}: {}", username, user.getRole().getName());
+                    logger.info("Id for user {}: {}", username, user.getId());
                     return user;
                 })
                 .map(userMapper::entityToDTO)
                 .map(userDto -> {
-                    logger.info("Role ID for user {}: {}", username, userDto.getRoleId());
+                    logger.info("Id for userDto {}: {}", username, userDto.getId());
                     return userDto;
                 });
     }
