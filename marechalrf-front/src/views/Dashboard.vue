@@ -35,8 +35,9 @@
               <td>{{ user?.phone }}</td>
               <td>{{ user?.username }}</td>
               <td>
-                <button @click="editUser(user)">Modifier</button>
-                <button @click="deleteUser(user?.id)">Supprimer</button>
+                <router-link :to="{ name: 'UserEdit', params: { id: user.id } }">
+                  Modifier
+                </router-link>
               </td>
             </tr>
             <!-- Si la liste est vide, un message s'affiche -->
@@ -84,66 +85,12 @@ export default {
         });
         console.log("Réponse de l'API:", response.data);
 
-        // Vérifie si la réponse est un objet (utilisateur unique)
-        if (response.data && typeof response.data === 'object') {
-          // Place l'utilisateur dans un tableau pour l'afficher dans v-for
-          this.filteredUsers = [response.data];
-        } else {
-          console.error('La réponse de l’API n’est pas valide:', response.data);
-          this.filteredUsers = [];
-        }
+        this.filteredUsers = response.data;
       } catch (error) {
         console.error('Erreur lors de la recherche des utilisateurs', error);
         this.filteredUsers = [];
       }
       console.log("Fin de la fonction searchUsers");
-    },
-    editUser(user) {
-      this.isEditing = true;
-      this.userForm = { ...user, roleId: user.role.id };
-    },
-    async createUser() {
-      try {
-        const response = await axios.post('http://localhost:8080/api/users', this.userForm);
-        this.users.push(response.data);
-        this.resetForm();
-        this.searchUsers(); // Mettre à jour la liste filtrée après ajout
-      } catch (error) {
-        console.error('Erreur lors de la création de l’utilisateur', error);
-      }
-    },
-    async updateUser() {
-      try {
-        const response = await axios.put(`http://localhost:8080/api/users/${this.userForm.id}`, this.userForm);
-        const index = this.users.findIndex(user => user.id === this.userForm.id);
-        this.$set(this.users, index, response.data);
-        this.resetForm();
-        this.searchUsers(); // Mettre à jour la liste filtrée après mise à jour
-      } catch (error) {
-        console.error('Erreur lors de la mise à jour de l’utilisateur', error);
-      }
-    },
-    async deleteUser(userId) {
-      try {
-        await axios.delete(`http://localhost:8080/api/users/${userId}`);
-        this.users = this.users.filter(user => user.id !== userId);
-        this.searchUsers(); // Mettre à jour la liste filtrée après suppression
-      } catch (error) {
-        console.error('Erreur lors de la suppression de l’utilisateur', error);
-      }
-    },
-    resetForm() {
-      this.isEditing = false;
-      this.userForm = {
-        id: null,
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        username: '',
-        password: '',
-        roleId: null
-      };
     }
   }
 };

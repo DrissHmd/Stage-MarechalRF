@@ -50,14 +50,9 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getUsersByUsername(@RequestParam String name) {
-        Optional<UserDto> userDto = userService.getUserByUsername(name);
-        if (userDto.isPresent()) {
-            return ResponseEntity.ok(userDto.get());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Aucun utilisateur trouvé avec le nom d'utilisateur: " + name);
-        }
+    public ResponseEntity<List<UserDto>> searchUsers(@RequestParam String name) {
+        List<UserDto> users = userService.findByContaining(name);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("")

@@ -49,6 +49,13 @@ public class UserService {
                 });
     }
 
+    public List<UserDto> findByContaining(String query) {
+        List<User> users = userRepository.findByContaining(query);
+        return users.stream()
+                .map(userMapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<UserDto> getAllUsers() {
         return userRepository.findAll()
                 .stream()

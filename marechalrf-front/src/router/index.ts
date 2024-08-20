@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import About from '../views/About.vue';
 import Contact from '../views/Contact.vue';
-import TrainingRequest from '../views/TrainingRequest.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue'
+import UserEdit from '@/views/UserEdit.vue';
 
 const routes = [
   {
@@ -24,11 +24,6 @@ const routes = [
     component: Contact
   },
   {
-    path: '/training-request',
-    name: 'TrainingRequest',
-    component: TrainingRequest
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login
@@ -42,6 +37,13 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/user-edit',
+    name: 'UserEdit',
+    component: UserEdit,
+    props: true,
     meta: { requiresAuth: true, requiresAdmin: true }
   }
 ];

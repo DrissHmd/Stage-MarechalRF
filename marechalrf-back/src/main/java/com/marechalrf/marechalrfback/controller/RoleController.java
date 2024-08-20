@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/api/roles")
 public class RoleController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
@@ -21,7 +21,7 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<Response<List<RoleDto>>> getAllRoles() {
         Callable<List<RoleDto>> f = roleService::getAllRoles;
         return ResponseController.createResponseEntity(f, LOGGER, null);
