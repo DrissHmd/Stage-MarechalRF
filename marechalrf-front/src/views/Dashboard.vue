@@ -6,7 +6,7 @@
 
       <!-- Barre de recherche -->
       <div class="search-bar">
-        <input v-model="searchQuery" placeholder="Rechercher un utilisateur par nom" />
+        <input v-model="searchQuery" placeholder="Rechercher un utilisateur par nom" required />
         <button @click="searchUsers">Rechercher</button>
       </div>
 

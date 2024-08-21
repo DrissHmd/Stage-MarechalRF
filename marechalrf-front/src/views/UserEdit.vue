@@ -69,6 +69,7 @@
       return { route, router };
     },
     created() {
+      console.log('Route Params:', this.route.params);
       this.fetchRoles();
       this.fetchUser();
     },
@@ -76,9 +77,9 @@
       async fetchRoles() {
         try {
             const response = await axios.get('http://localhost:8080/api/roles/all');
-            console.log("Response Data : ", response.data);
+            console.log("Response Data : ", response.data.data.map(role => role.name));
             if (response && response.data) {
-                this.roles = response.data;
+                this.roles = response.data.data;
             } else {
                 console.error('La réponse de l\'API est vide ou non définie');
             }
@@ -94,9 +95,20 @@
       },
       async fetchUser() {
         const userId = this.route.params.id;
+        console.log('Fetched User ID:', userId);
+        if (!userId) {
+          console.error('Invalid User ID:', userId);
+          return;
+        }
         try {
           const response = await axios.get(`http://localhost:8080/api/users/${userId}`);
-          this.userForm = { ...response.data, roleId: response.data.role.id };
+          console.log('Response.data : ', response.data)
+          if (response && response.data) {
+            this.userForm = response.data.data;
+            console.log("UserForm : ", this.userForm);
+          } else {
+            console.error('No data returned for user ID:', userId);
+          }
         } catch (error) {
           console.error('Erreur lors du chargement de l’utilisateur', error);
         }

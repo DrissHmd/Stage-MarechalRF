@@ -25,7 +25,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const showHeaderAndFooter = computed(() => {
-      return route.path !== '/login' && route.path !== '/register' && route.path !== '/user-edit';
+      return route.path !== '/login' && route.path !== '/register' && route.path !== '/user-edit/:id';
     });
     return {
       showHeaderAndFooter

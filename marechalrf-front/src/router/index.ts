@@ -40,7 +40,7 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
-    path: '/user-edit',
+    path: '/user-edit/:id',
     name: 'UserEdit',
     component: UserEdit,
     props: true,
