@@ -78,9 +78,11 @@ public class AuthController {
             }
 
             UserDto user = optionalUser.get();
+            logger.info("User Password {}",user.getPassword());
+            logger.info("UserDto Password {}",userDto.getPassword());
 
             if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
-                throw new InvalidCredentialsException("Invalid username or password");
+                throw new InvalidCredentialsException("Invalid password");
             }
 
             String token = jwtUtil.generateToken(user.getUsername());
