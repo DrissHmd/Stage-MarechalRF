@@ -6,6 +6,10 @@ import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import Dashboard from '../views/Dashboard.vue'
 import UserEdit from '@/views/UserEdit.vue';
+import TrainingRequest from '@/views/TrainingRequest.vue';
+import Section1 from '@/views/Section1.vue';
+import Section2 from '@/views/Section2.vue';
+import Section3 from '@/views/Section3.vue';
 
 const routes = [
   {
@@ -32,6 +36,31 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/training-request',
+    component: TrainingRequest,
+    children: [
+      {
+        path: 'section1',
+        name: 'section1',
+        component: Section1,
+      },
+      {
+        path: 'section2',
+        name: 'section2',
+        component: Section2,
+      },
+      {
+        path: 'section3',
+        name: 'section3',
+        component: Section3,
+      },
+      {
+        path: '',
+        redirect: { name: 'section1' },  // Redirection vers la première section
+      },
+    ],
   },
   {
     path: '/dashboard',
