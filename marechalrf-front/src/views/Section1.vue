@@ -46,9 +46,6 @@ export default {
       },
       deep: true
     }
-  },
-  methods: {
-    // Si tu as besoin d'une méthode spécifique pour un traitement avant l'émission des données, tu peux la définir ici.
   }
 };
 </script>

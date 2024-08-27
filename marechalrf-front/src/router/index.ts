@@ -43,22 +43,15 @@ const routes = [
     children: [
       {
         path: 'section1',
-        name: 'section1',
         component: Section1,
       },
       {
         path: 'section2',
-        name: 'section2',
         component: Section2,
       },
       {
         path: 'section3',
-        name: 'section3',
         component: Section3,
-      },
-      {
-        path: '',
-        redirect: { name: 'section1' },  // Redirection vers la première section
       },
     ],
   },

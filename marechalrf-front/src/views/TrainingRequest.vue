@@ -93,21 +93,24 @@ export default {
     },
     isValidForm() {
       if (this.currentTab === 0) {
-        return this.form.nom && this.form.prenom && this.form.entreprise && this.form.fonction && this.form.email;
+        return this.form.nom.trim() && this.form.prenom.trim() && this.form.entreprise.trim() && this.form.fonction.trim() && this.form.email.trim();
       }
       if (this.currentTab === 1) {
-        return this.form.besoinsFormation && this.form.sujetsAborder && this.form.objectifs && this.form.exigencesSpecifiques && this.form.typeFormation && this.form.effectif && this.form.duree;
+        return this.form.besoinsFormation.trim() && 
+              this.form.sujetsAborder.trim() && 
+              this.form.objectifs.trim() && 
+              this.form.exigencesSpecifiques.trim() && 
+              this.form.typeFormation.trim() && 
+              this.form.effectif > 0 &&  
+              this.form.duree > 0        
       }
       if (this.currentTab === 2) {
         if (this.form.handicap === 'Oui') {
-          return this.form.typeHandicap && this.form.amenagement;
+          return this.form.typeHandicap.trim() && this.form.amenagement.trim();
         }
-        return true; // Juste pour ne pas bloquer l'envoi s'il n'y a pas de handicap
+        return true;
       }
       return false;
-    },
-    canSubmit() {
-      return this.currentTab === 2 && this.isValidForm;
     }
   },
   methods: {
@@ -117,11 +120,12 @@ export default {
       }
     },
     nextTab() {
-      if (this.currentTab < 2) {
+      console.log("Current Tab:", this.currentTab);
+      console.log("Form Data:", this.form);
+      console.log("IsValidForm:", this.isValidForm);
+
+      if (this.isValidForm && this.currentTab < 2) {
         this.currentTab++;
-        if (this.currentTab === 1) {
-          this.sendNotification();
-        }
       }
     },
     updateForm(updatedFields) {
