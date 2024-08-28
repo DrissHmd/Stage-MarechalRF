@@ -46,6 +46,7 @@ export default {
         fonction: '',
         email: '',
         phone: '',
+        consent: false, // Ajouter la propriété consent ici
         besoinsFormation: '',
         sujetsAborder: '',
         objectifs: '',
@@ -79,38 +80,14 @@ export default {
     };
   },
   computed: {
-    currentComponent() {
-      switch (this.currentTab) {
-        case 0:
-          return 'Section1';
-        case 1:
-          return 'Section2';
-        case 2:
-          return 'Section3';
-        default:
-          return 'Section1';
-      }
-    },
     isValidForm() {
-      if (this.currentTab === 0) {
-        return this.form.nom.trim() && this.form.prenom.trim() && this.form.entreprise.trim() && this.form.fonction.trim() && this.form.email.trim();
-      }
-      if (this.currentTab === 1) {
-        return this.form.besoinsFormation.trim() && 
-              this.form.sujetsAborder.trim() && 
-              this.form.objectifs.trim() && 
-              this.form.exigencesSpecifiques.trim() && 
-              this.form.typeFormation.trim() && 
-              this.form.effectif > 0 &&  
-              this.form.duree > 0        
-      }
-      if (this.currentTab === 2) {
-        if (this.form.handicap === 'Oui') {
-          return this.form.typeHandicap.trim() && this.form.amenagement.trim();
-        }
-        return true;
-      }
-      return false;
+      return this.form.nom && this.form.prenom && this.form.email && this.form.consent;
+    },
+    canSubmit() {
+      return this.isValidForm && this.currentTab === 2;
+    },
+    currentComponent() {
+      return ['Section1', 'Section2', 'Section3'][this.currentTab];
     }
   },
   methods: {
@@ -119,79 +96,20 @@ export default {
         this.currentTab--;
       }
     },
-    nextTab() {
-      console.log("Current Tab:", this.currentTab);
-      console.log("Form Data:", this.form);
-      console.log("IsValidForm:", this.isValidForm);
-
+    async nextTab() {
       if (this.isValidForm && this.currentTab < 2) {
+        if (this.currentTab === 0 && this.form.consent) {
+          await this.sendNotification(); // Envoie l'e-mail après la section 1
+        }
         this.currentTab++;
       }
     },
     updateForm(updatedFields) {
       this.form = { ...this.form, ...updatedFields };
     },
-    async submitForm() {
-      try {
-        const response = await fetch('http://localhost:8080/api/form-submit', { // Remplace par l'URL de ton service backend
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.form),
-        });
-        if (!response.ok) {
-          throw new Error('Erreur lors de l\'envoi du formulaire');
-        }
-        const data = await response.json();
-        console.log('Formulaire soumis avec succès:', data);
-        alert('Formulaire envoyé avec succès');
-        // Réinitialiser le formulaire après l'envoi
-        this.form = {
-          nom: '',
-          prenom: '',
-          entreprise: '',
-          fonction: '',
-          email: '',
-          phone: '',
-          besoinsFormation: '',
-          sujetsAborder: '',
-          objectifs: '',
-          exigencesSpecifiques: '',
-          typeFormation: '',
-          effectif: '',
-          duree: '',
-          intervenant: '',
-          publicFormer: '',
-          postes: '',
-          experience: '',
-          connaissances: '',
-          effectifGroupes: '',
-          risques: '',
-          horaires: '',
-          dates: '',
-          frequence: '',
-          lieu: '',
-          collations: '',
-          equipement: '',
-          outilsTech: '',
-          outilsPedago: '',
-          budget: '',
-          financement: '',
-          modalites: '',
-          handicap: '',
-          typeHandicap: '',
-          amenagement: '',
-          commentaires: ''
-        };
-      } catch (error) {
-        console.error(error);
-        alert('Erreur lors de l\'envoi du formulaire');
-      }
-    },
     async sendNotification() {
       try {
-        const response = await fetch('http://localhost:8080/api/send-email', { // Remplace par l'URL de ton service backend pour envoyer un email
+        const response = await fetch('http://localhost:8080/api/send-email', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -199,7 +117,7 @@ export default {
           body: JSON.stringify({
             to: 'marechalretf@gmail.com',
             subject: 'Passage à la première section du formulaire',
-            text: 'L’utilisateur a passé à la première section du formulaire.'
+            text: `L'utilisateur ${this.form.nom} ${this.form.prenom} de l'entreprise ${this.form.entreprise} a terminé la première section du formulaire.`
           }),
         });
         if (!response.ok) {
@@ -210,12 +128,17 @@ export default {
       } catch (error) {
         console.error('Erreur lors de l\'envoi de la notification:', error);
       }
+    },
+    async submitForm() {
+      // Implémentez ici la logique de soumission du formulaire
+      console.log('Formulaire soumis', this.form);
     }
   }
 };
 </script>
 
 <style scoped>
+/* Styles inchangés */
 .form-with-tabs {
   max-width: 800px;
   margin: 0 auto;

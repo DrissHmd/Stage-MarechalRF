@@ -4,7 +4,7 @@
     <h2>Handicap</h2>
     <div>
       <label for="handicap">Y a-t-il des apprenants atteints d'un handicap ? *</label>
-      <select v-model="localForm.handicap" id="handicap" required>
+      <select v-model="localForm.handicap" id="handicap" required @change="handleHandicapChange">
         <option value="Oui">Oui</option>
         <option value="Non">Non</option>
       </select>
@@ -43,11 +43,25 @@ export default {
     };
   },
   watch: {
+    'localForm.handicap': function(newValue) {
+      console.log('Handicap field changed:', newValue);
+    },
+    'localForm.typeHandicap': function(newValue) {
+      console.log('TypeHandicap field changed:', newValue);
+    },
     localForm: {
       handler(newValue) {
+        console.log('localForm updated:', newValue);
         this.$emit('update-form', newValue);  // Émettre les changements au parent
       },
       deep: true  // Observer les changements profonds dans l'objet
+    }
+  },
+  methods: {
+    handleHandicapChange() {
+      if (this.localForm.handicap === 'Non') {
+        this.localForm.typeHandicap = 'Non';  // Réinitialiser typeHandicap à "Non" si handicap est "Non"
+      }
     }
   }
 };

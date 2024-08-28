@@ -26,6 +26,11 @@
       <label for="phone">Numéro de téléphone</label>
       <input type="text" v-model="localForm.phone" id="phone" />
     </div>
+    <div>
+      <input type="checkbox" v-model="localForm.consent" id="consent" />
+      <label for="consent">Mentions légales *</label>
+      En cochant la case ci-dessus, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis d'assurance, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données
+    </div>
   </div>
 </template>
 
@@ -36,7 +41,7 @@ export default {
   },
   data() {
     return {
-      localForm: { ...this.form } // Copie locale du formulaire
+      localForm: { ...this.form } // Ajout de la propriété 'consent'
     };
   },
   watch: {
@@ -60,11 +65,14 @@ label {
   margin-bottom: 5px;
   font-weight: bold;
 }
-input {
+input[type="text"], input[type="email"] {
   width: 100%;
   padding: 8px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+input[type="checkbox"] {
+  margin-right: 10px;
 }
 </style>
