@@ -1,22 +1,23 @@
 <template>
   <div class="form-with-tabs">
-    <!-- Tabs are only for indication, no navigation here -->
+    <!-- Onglets d'indication, pas de navigation ici -->
     <ul class="tabs">
       <li :class="{ active: currentTab === 0 }">Informations Générales</li>
       <li :class="{ active: currentTab === 1 }">Questions Supplémentaires</li>
       <li :class="{ active: currentTab === 2 }">Handicap</li>
     </ul>
 
-    <!-- Render the current component based on the tab -->
+    <!-- Affiche le composant actuel basé sur l'onglet -->
     <transition name="fade">
       <component
         :is="currentComponent"
         :form="form"
         @update-form="updateForm"
+        @validate-email="validateEmail"
       />
     </transition>
 
-    <!-- Navigation and submission buttons -->
+    <!-- Boutons de navigation et soumission -->
     <div class="buttons">
       <button @click="prevTab" :disabled="currentTab === 0">Précédent</button>
       <button @click="nextTab" :disabled="!isValidForm">Suivant</button>
@@ -46,99 +47,105 @@ export default {
         fonction: '',
         email: '',
         phone: '',
-        consent: false, // Ajouter la propriété consent ici
-        besoinsFormation: '',
-        sujetsAborder: '',
-        objectifs: '',
-        exigencesSpecifiques: '',
-        typeFormation: '',
-        effectif: '',
-        duree: '',
-        intervenant: '',
-        publicFormer: '',
-        postes: '',
-        experience: '',
-        connaissances: '',
-        effectifGroupes: '',
-        risques: '',
-        horaires: '',
-        dates: '',
-        frequence: '',
-        lieu: '',
-        collations: '',
-        equipement: '',
-        outilsTech: '',
-        outilsPedago: '',
-        budget: '',
-        financement: '',
-        modalites: '',
-        handicap: '',
-        typeHandicap: '',
-        amenagement: '',
-        commentaires: ''
-      }
+        consent: false,
+        // Ajoutez tous les autres champs nécessaires ici
+        // ...
+      },
+      emailError: ''
     };
   },
   computed: {
     isValidForm() {
-      return this.form.nom && this.form.prenom && this.form.email && this.form.consent;
+      // Validation basée sur l'onglet actuel
+      if (this.currentTab === 0) {
+        return this.form.nom && this.form.prenom && this.form.email && this.form.consent && !this.emailError;
+      }
+      // Ajouter des validations pour les autres onglets si nécessaire
+      return true;
     },
     canSubmit() {
+      // Validation finale avant soumission
       return this.isValidForm && this.currentTab === 2;
     },
     currentComponent() {
-      return ['Section1', 'Section2', 'Section3'][this.currentTab];
+      const component = ['Section1', 'Section2', 'Section3'][this.currentTab];
+      console.log('Composant actuel:', component);
+      return component;
     }
   },
   methods: {
     prevTab() {
       if (this.currentTab > 0) {
+        console.log('Retour à l\'onglet précédent:', this.currentTab);
         this.currentTab--;
       }
     },
     async nextTab() {
+      console.log('Validation de l\'onglet actuel:', this.currentTab);
       if (this.isValidForm && this.currentTab < 2) {
-        if (this.currentTab === 0 && this.form.consent) {
-          await this.sendNotification(); // Envoie l'e-mail après la section 1
+        if (this.currentTab === 0) {
+          console.log('Soumission de la notification après la première section');
+          if (this.form.consent) {
+            await this.sendNotification();
+          }
         }
         this.currentTab++;
+        console.log('Passage à l\'onglet suivant:', this.currentTab);
+      } else {
+        console.log('Formulaire non valide pour avancer:', this.form);
       }
     },
     updateForm(updatedFields) {
       this.form = { ...this.form, ...updatedFields };
     },
+    validateEmail(email) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        this.emailError = 'Adresse email invalide.';
+      } else {
+        this.emailError = '';
+      }
+    },
     async sendNotification() {
+      console.log('Envoi de la notification avec les données:', JSON.stringify(this.form, null, 2));
       try {
-        const response = await fetch('http://localhost:8080/api/send-email', {
+        const response = await fetch('http://localhost:8080/api/contact', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            to: 'marechalretf@gmail.com',
-            subject: 'Passage à la première section du formulaire',
-            text: `L'utilisateur ${this.form.nom} ${this.form.prenom} de l'entreprise ${this.form.entreprise} a terminé la première section du formulaire.`
+            nom: this.form.nom,
+            prenom: this.form.prenom,
+            entreprise: this.form.entreprise,
+            fonction: this.form.fonction,
+            email: this.form.email,
+            telephone: this.form.phone,
+            message: 'Contact venant du formulaire',
+            consent: this.form.consent
           }),
+          credentials: 'include',
         });
+        console.log('Réponse du serveur:', response);
         if (!response.ok) {
-          throw new Error('Erreur lors de l\'envoi de la notification');
+          throw new Error('Erreur lors de l\'envoi du formulaire');
         }
         const data = await response.json();
-        console.log('Notification envoyée:', data);
+        console.log('Formulaire de contact soumis avec succès:', data);
       } catch (error) {
-        console.error('Erreur lors de l\'envoi de la notification:', error);
+        console.error('Erreur lors de l\'envoi des informations:', error);
       }
     },
     async submitForm() {
-      // Implémentez ici la logique de soumission du formulaire
-      console.log('Formulaire soumis', this.form);
+      // Logique de soumission finale du formulaire
+      console.log('Soumission finale du formulaire:', this.form);
+      // ... (le reste de votre méthode submitForm)
     }
   }
 };
 </script>
 
 <style scoped>
-/* Styles inchangés */
 .form-with-tabs {
   max-width: 800px;
   margin: 0 auto;

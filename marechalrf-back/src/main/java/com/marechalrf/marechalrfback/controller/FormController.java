@@ -16,7 +16,6 @@ public class FormController {
 
     @PostMapping("/form-submit")
     public ResponseEntity<?> submitForm(@Valid @RequestBody FormData formData) {
-        // Sauvegarde du formulaire et envoi de la notification se fait dans le service
         FormData savedFormData = formService.saveFormData(formData);
         return ResponseEntity.ok(savedFormData);
     }

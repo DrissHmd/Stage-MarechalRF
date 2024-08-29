@@ -20,16 +20,23 @@
     </div>
     <div>
       <label for="email">Adresse mail *</label>
-      <input type="email" v-model="localForm.email" id="email" required />
+      <input
+        type="email"
+        v-model="localForm.email"
+        id="email"
+        @input="handleEmailInput"
+        required
+      />
+      <span v-if="emailError" style="color: red;">{{ emailError }}</span>
     </div>
     <div>
       <label for="phone">Numéro de téléphone</label>
       <input type="text" v-model="localForm.phone" id="phone" />
     </div>
     <div>
-      <input type="checkbox" v-model="localForm.consent" id="consent" />
+      <input type="checkbox" v-model="localForm.consent" id="consent" required />
       <label for="consent">Mentions légales *</label>
-      En cochant la case ci-dessus, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis d'assurance, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données
+      En cochant la case ci-dessus, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis d'assurance, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données.
     </div>
   </div>
 </template>
@@ -41,22 +48,28 @@ export default {
   },
   data() {
     return {
-      localForm: { ...this.form } // Ajout de la propriété 'consent'
+      localForm: { ...this.form },
+      emailError: ''
     };
   },
   watch: {
     localForm: {
       handler(newValue) {
         this.$emit('update-form', newValue); // Émettre la mise à jour vers le parent
+        this.$emit('validate-email', newValue.email); // Émettre l'événement de validation d'email
       },
       deep: true
+    }
+  },
+  methods: {
+    handleEmailInput() {
+      this.$emit('validate-email', this.localForm.email); // Émettre l'événement de validation d'email
     }
   }
 };
 </script>
 
 <style scoped>
-/* Style pour les champs de formulaire */
 div {
   margin-bottom: 15px;
 }
