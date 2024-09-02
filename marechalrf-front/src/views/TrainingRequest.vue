@@ -20,8 +20,8 @@
     <!-- Boutons de navigation et soumission -->
     <div class="buttons">
       <button @click="prevTab" :disabled="currentTab === 0">Précédent</button>
-      <button @click="nextTab" :disabled="!isValidForm">Suivant</button>
-      <button @click="submitForm" :disabled="!canSubmit">Envoyer la Demande</button>
+      <button v-if="currentTab < 2" @click="nextTab" :disabled="!isValidForm">Suivant</button>
+      <button v-if="currentTab === 2" @click="submitForm" :disabled="!canSubmit">Envoyer la Demande</button>
     </div>
   </div>
 </template>
@@ -48,19 +48,54 @@ export default {
         email: '',
         phone: '',
         consent: false,
-        // Ajoutez tous les autres champs nécessaires ici
-        // ...
+        besoinsFormation: '',
+        sujetsAborder: '',
+        objectifs: '',
+        exigencesSpecifiques: '',
+        typeFormation: '',
+        effectif: null,
+        duree: null,
+        handicap: '',
+        typeHandicap: '',
+        amenagement: '',
+        commentaires: ''
       },
       emailError: ''
     };
+  },
+  watch: {
+    // Surveiller les changements dans le champ 'handicap'
+    'form.handicap'(newValue) {
+      if (newValue === 'Oui' && !this.form.typeHandicap) {
+        this.form.isValidForm = false;
+      }
+    },
+    'form.typeHandicap'(newValue) {
+      // Si 'handicap' est "Oui", vérifie que 'typeHandicap' n'est pas vide
+      if (this.form.handicap === 'Oui' && !newValue) {
+        this.form.isValidForm = false;
+      }
+    }
   },
   computed: {
     isValidForm() {
       // Validation basée sur l'onglet actuel
       if (this.currentTab === 0) {
-        return this.form.nom && this.form.prenom && this.form.email && this.form.consent && !this.emailError;
+        return this.form.nom && this.form.prenom && this.form.entreprise && this.form.fonction && this.form.email && this.form.consent && !this.emailError && !this.phoneError;
       }
-      // Ajouter des validations pour les autres onglets si nécessaire
+      if (this.currentTab === 1) {
+        return this.form.besoinsFormation && this.form.sujetsAborder && this.form.objectifs && this.form.exigencesSpecifiques &&
+               this.form.typeFormation && this.form.effectif >= 1 && this.form.duree >= 1;
+      }
+      if (this.currentTab === 2) {
+        if (!this.form.handicap) {
+          return false;
+        }
+        if (this.form.handicap === 'Oui') {
+          return !this.form.typeHandicap;  // Assurez-vous que typeHandicap n'est pas vide
+        }
+        return this.form.handicap === 'Non';
+      }
       return true;
     },
     canSubmit() {
@@ -76,12 +111,12 @@ export default {
   methods: {
     prevTab() {
       if (this.currentTab > 0) {
-        console.log('Retour à l\'onglet précédent:', this.currentTab);
+        console.log('Retour à l\'onglet précédent:', this.currentTab + 1);
         this.currentTab--;
       }
     },
     async nextTab() {
-      console.log('Validation de l\'onglet actuel:', this.currentTab);
+      console.log('Validation de l\'onglet actuel:', this.currentTab + 1);
       if (this.isValidForm && this.currentTab < 2) {
         if (this.currentTab === 0) {
           console.log('Soumission de la notification après la première section');
@@ -90,7 +125,7 @@ export default {
           }
         }
         this.currentTab++;
-        console.log('Passage à l\'onglet suivant:', this.currentTab);
+        console.log('Passage à l\'onglet suivant:', this.currentTab + 1);
       } else {
         console.log('Formulaire non valide pour avancer:', this.form);
       }
