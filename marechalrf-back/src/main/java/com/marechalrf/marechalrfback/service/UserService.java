@@ -4,13 +4,18 @@ import com.marechalrf.marechalrfback.dto.UserDto;
 import com.marechalrf.marechalrfback.dto.mapper.UserMapper;
 import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
+import com.marechalrf.marechalrfback.model.VerificationToken;
 import com.marechalrf.marechalrfback.repository.RoleRepository;
 import com.marechalrf.marechalrfback.repository.UserRepository;
+import com.marechalrf.marechalrfback.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +32,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private JavaMailSender mailSender;
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
 
     @Autowired
     public UserService(UserMapper userMapper, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
@@ -87,7 +96,6 @@ public class UserService {
         user.setEmail(userDetails.getEmail());
         user.setPhone(userDetails.getPhone());
         user.setUsername(userDetails.getUsername());
-        user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         if (userDetails.getRoleId() != null) {
             Role role = roleRepository.findById(userDetails.getRoleId())
                     .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -99,5 +107,37 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Optional<UserDto> getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::entityToDTO);
+    }
+
+    public void saveVerificationToken(User user, String token) {
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15); // Token valide 15 minutes
+        VerificationToken verificationToken = new VerificationToken(token, expirationDate, user);
+        tokenRepository.save(verificationToken);
+    }
+
+    public void sendVerificationEmail(User user, String token) {
+        // Utilisez JavaMailSender pour envoyer l'e-mail de vérification
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(user.getEmail());
+        message.setSubject("Email Verification");
+        message.setText("Votre code de vérification est : " + token);
+        mailSender.send(message);
+    }
+
+    public boolean verifyToken(String token) {
+        Optional<VerificationToken> verificationToken = tokenRepository.findByToken(token);
+        if (verificationToken.isPresent() && verificationToken.get().getExpirationDate().isAfter(LocalDateTime.now())) {
+            return true;
+        }
+        return false;
+    }
+
+    public void deleteExpiredTokens() {
+        tokenRepository.deleteByExpirationDateBefore(LocalDateTime.now());
     }
 }

@@ -42,7 +42,7 @@
       <li v-if="isLoggedIn" class="navbar-item" @click="toggleDropdown">
         <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
         <ul v-if="isDropdownOpen" class="dropdown-menu">
-          <router-link class="dashboard-link" to="/dashboard">Profil</router-link>
+          <router-link v-if="isAdmin" class="dashboard-link" to="/dashboard">Dashboard</router-link>
           <li @click="logout">Déconnexion</li>
         </ul>
       </li>
@@ -78,6 +78,7 @@ export default defineComponent({
     };
 
     const isLoggedIn = computed(() => !!localStorage.getItem('token'));
+    const isAdmin = computed(() => localStorage.getItem('roleId') === "2");
 
     return {
       isMenuOpen,
@@ -85,7 +86,8 @@ export default defineComponent({
       toggleMenu,
       toggleDropdown,
       logout,
-      isLoggedIn
+      isLoggedIn,
+      isAdmin
     };
   }
 });

@@ -150,7 +150,7 @@ export default {
   border-radius: 4px;
 }
 
-.button {
+button {
   padding: 0.5rem 1rem;
   background-color: #007bff;
   color: white;

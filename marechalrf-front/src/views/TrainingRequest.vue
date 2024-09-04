@@ -92,7 +92,7 @@ export default {
           return false;
         }
         if (this.form.handicap === 'Oui') {
-          return !this.form.typeHandicap;  // Assurez-vous que typeHandicap n'est pas vide
+          return this.form.typeHandicap != "" && this.form.typeHandicap != "Non";
         }
         return this.form.handicap === 'Non';
       }

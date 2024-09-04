@@ -11,6 +11,8 @@
           <label for="password">Mot de passe</label>
           <input type="password" id="password" v-model="password" required />
         </div>
+        <!-- Lien vers la page "Mot de passe oublié" -->
+        <router-link to="/forgot-password" class="forgot-password-link">Mot de passe oublié ?</router-link>
         <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
         <button type="submit" class="login-button">Se connecter</button>
       </form>

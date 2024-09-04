@@ -4,6 +4,8 @@ import About from '../views/About.vue';
 import Contact from '../views/Contact.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import ForgotPassword from '../views/ForgotPassword.vue';
+import VerifyCode from '../views/VerifyCode.vue';
 import Dashboard from '../views/Dashboard.vue'
 import UserEdit from '@/views/UserEdit.vue';
 import TrainingRequest from '@/views/TrainingRequest.vue';
@@ -36,6 +38,16 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  { 
+    path: '/forgot-password',
+    name: 'ForgotPassword',
+    component: ForgotPassword 
+  },
+  { 
+    path: '/verify-code',
+    name: 'VerifyCode', 
+    component: VerifyCode 
   },
   {
     path: '/training-request',

@@ -100,4 +100,39 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
         }
     }
+
+    @PostMapping("/send-verification-code")
+    public ResponseEntity<?> sendVerificationCode(@RequestParam String email) {
+        Optional<UserDto> optionalUser = userService.getUserByEmail(email);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this email");
+        }
+
+        String verificationCode = generateVerificationCode();
+        userService.saveVerificationCode(email, verificationCode);
+        userService.sendVerificationEmail(email, verificationCode);
+
+        return ResponseEntity.ok("Verification code sent to your email");
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<?> verifyCode(@RequestParam String email, @RequestParam String code) {
+        try {
+            boolean isValid = userService.isVerificationCodeValid(email, code);
+            if (isValid) {
+                return ResponseEntity.ok("Verification successful");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired verification code");
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    private String generateVerificationCode() {
+        return UUID.randomUUID().toString().substring(0, 6);  // Génère un code de 6 caractères
+    }
+
+
 }
