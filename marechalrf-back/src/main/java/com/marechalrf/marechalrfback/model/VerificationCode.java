@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "verification_tokens")
-public class VerificationToken {
+public class VerificationCode {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,10 +28,10 @@ public class VerificationToken {
 
     // Constructors, getters, and setters
 
-    public VerificationToken() {
+    public VerificationCode() {
     }
 
-    public VerificationToken(String token, LocalDateTime expirationDate, User user) {
+    public VerificationCode(String token, LocalDateTime expirationDate, User user) {
         this.token = token;
         this.expirationDate = expirationDate;
         this.user = user;

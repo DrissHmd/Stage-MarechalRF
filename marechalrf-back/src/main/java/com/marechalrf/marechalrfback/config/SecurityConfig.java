@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**", "/api/contact", "/api/users/**", "/api/roles/all", "/api/form-submit").permitAll()
+                                .requestMatchers("/api/auth/**", "/api/contact", "/api/users/**", "/api/roles/all", "/api/form-submit", "/api/auth/send-verification-code", "/api/auth/verify-code", "/api/auth/reset-password").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin ->

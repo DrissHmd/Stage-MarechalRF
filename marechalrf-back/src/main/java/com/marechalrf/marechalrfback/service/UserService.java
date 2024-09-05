@@ -4,10 +4,11 @@ import com.marechalrf.marechalrfback.dto.UserDto;
 import com.marechalrf.marechalrfback.dto.mapper.UserMapper;
 import com.marechalrf.marechalrfback.model.Role;
 import com.marechalrf.marechalrfback.model.User;
-import com.marechalrf.marechalrfback.model.VerificationToken;
+import com.marechalrf.marechalrfback.model.VerificationCode;
 import com.marechalrf.marechalrfback.repository.RoleRepository;
 import com.marechalrf.marechalrfback.repository.UserRepository;
-import com.marechalrf.marechalrfback.repository.VerificationTokenRepository;
+import com.marechalrf.marechalrfback.repository.VerificationCodeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,7 +36,9 @@ public class UserService {
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
-    private VerificationTokenRepository tokenRepository;
+    private VerificationCodeRepository tokenRepository;
+    @Autowired
+    private VerificationCodeRepository verificationCodeRepository;
 
     @Autowired
     public UserService(UserMapper userMapper, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
@@ -89,6 +92,7 @@ public class UserService {
         return userMapper.entityToDTO(savedUser);
     }
 
+    @Transactional
     public UserDto updateUser(Long id, UserDto userDetails) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setFirst_name(userDetails.getFirst_name());
@@ -114,14 +118,13 @@ public class UserService {
                 .map(userMapper::entityToDTO);
     }
 
-    public void saveVerificationToken(User user, String token) {
-        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15); // Token valide 15 minutes
-        VerificationToken verificationToken = new VerificationToken(token, expirationDate, user);
-        tokenRepository.save(verificationToken);
+    public void saveVerificationCode(UserDto user, String code) {
+        LocalDateTime expirationDate = LocalDateTime.now().plusMinutes(15);  // Expire dans 15 minutes
+        VerificationCode verificationCode = new VerificationCode(code, expirationDate, userMapper.dtoToEntity(user));
+        verificationCodeRepository.save(verificationCode);
     }
 
-    public void sendVerificationEmail(User user, String token) {
-        // Utilisez JavaMailSender pour envoyer l'e-mail de vérification
+    public void sendVerificationEmail(UserDto user, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(user.getEmail());
         message.setSubject("Email Verification");
@@ -129,15 +132,12 @@ public class UserService {
         mailSender.send(message);
     }
 
-    public boolean verifyToken(String token) {
-        Optional<VerificationToken> verificationToken = tokenRepository.findByToken(token);
-        if (verificationToken.isPresent() && verificationToken.get().getExpirationDate().isAfter(LocalDateTime.now())) {
-            return true;
-        }
-        return false;
+    public boolean verifyCode(String token) {
+        Optional<VerificationCode> verificationCode = verificationCodeRepository.findByToken(token);
+        return verificationCode.isPresent() && verificationCode.get().getExpirationDate().isAfter(LocalDateTime.now());
     }
 
-    public void deleteExpiredTokens() {
-        tokenRepository.deleteByExpirationDateBefore(LocalDateTime.now());
+    public void deleteExpiredCodes() {
+        verificationCodeRepository.deleteByExpirationDateBefore(LocalDateTime.now());
     }
 }

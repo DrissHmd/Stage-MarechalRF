@@ -1,13 +1,13 @@
 package com.marechalrf.marechalrfback.repository;
 
-import com.marechalrf.marechalrfback.model.VerificationToken;
+import com.marechalrf.marechalrfback.model.VerificationCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
-    Optional<VerificationToken> findByToken(String token);
+public interface VerificationCodeRepository extends JpaRepository<VerificationCode, Long> {
+    Optional<VerificationCode> findByToken(String token);
     void deleteByExpirationDateBefore(java.time.LocalDateTime now);
 }

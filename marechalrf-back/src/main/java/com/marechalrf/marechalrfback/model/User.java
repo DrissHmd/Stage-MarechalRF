@@ -52,17 +52,4 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
-    private String verificationCode;
-
-    private LocalDateTime verificationCodeExpiryDate;
-
-    public boolean isVerificationCodeExpired() {
-        return verificationCodeExpiryDate != null && LocalDateTime.now().isAfter(verificationCodeExpiryDate);
-    }
-
-    public void clearVerificationCode() {
-        this.verificationCode = null;
-        this.verificationCodeExpiryDate = null;
-    }
 }

@@ -70,6 +70,7 @@ export default defineComponent({
     };
 
     const logout = () => {
+      localStorage.removeItem('roleId');
       localStorage.removeItem('token');
       router.push('/');
       setTimeout(() => {
