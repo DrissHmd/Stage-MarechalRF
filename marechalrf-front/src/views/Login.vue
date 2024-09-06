@@ -48,7 +48,7 @@ export default defineComponent({
           }
         });
 
-        const { token, role } = response.data;
+        const { token, role, userId } = response.data;
         console.log("Response.data : ", response.data);
         console.log("Role id : ", role);
 
@@ -59,6 +59,7 @@ export default defineComponent({
 
         localStorage.setItem('token', token);
         localStorage.setItem('roleId', role.toString());
+        localStorage.setItem('userId', userId);
 
         if (role === 2) {
           router.push('/dashboard');
@@ -180,7 +181,12 @@ export default defineComponent({
   text-decoration: none;
 }
 
-.register-link:hover {
+.forgot-password-link{
+  text-decoration: none;
+  color: #007bff;
+}
+
+.register-link:hover, .forgot-password-link:hover {
   text-decoration: underline;
 }
 </style>

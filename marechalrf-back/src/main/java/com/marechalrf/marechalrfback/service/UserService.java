@@ -100,6 +100,7 @@ public class UserService {
         user.setEmail(userDetails.getEmail());
         user.setPhone(userDetails.getPhone());
         user.setUsername(userDetails.getUsername());
+        user.setPassword(userDetails.getPassword());
         if (userDetails.getRoleId() != null) {
             Role role = roleRepository.findById(userDetails.getRoleId())
                     .orElseThrow(() -> new RuntimeException("Role not found"));

@@ -63,6 +63,7 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("user", createdUser);
             response.put("token", token);
+            response.put("userId", createdUser.getId());
             response.put("message", "User registered successfully!");
 
             return ResponseEntity.ok(response);
@@ -92,6 +93,7 @@ public class AuthController {
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("role", user.getRoleId());
+            response.put("userId", user.getId());
             response.put("message", "Login successful");
 
             return ResponseEntity.ok(response);
@@ -116,7 +118,7 @@ public class AuthController {
 
         String verificationCode = generateVerificationCode();  // Générer un nouveau code
         userService.saveVerificationCode(user, verificationCode);  // Sauvegarder le code dans la table VerificationCode
-        userService.sendVerificationEmail(user, verificationCode);  // Envoyer l'email de vérification
+        //userService.sendVerificationEmail(user, verificationCode);  // Envoyer l'email de vérification
 
         return ResponseEntity.ok("Verification code sent to your email");
     }
@@ -125,6 +127,14 @@ public class AuthController {
     @PostMapping("/verify-code")
     public ResponseEntity<?> verifyCode(@RequestParam String email, @RequestParam String code) {
         try {
+            // Rechercher l'utilisateur par email
+            Optional<UserDto> optionalUser = userService.getUserByEmail(email);
+
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with this email");
+            }
+
+            UserDto user = optionalUser.get();
             boolean isValid = userService.verifyCode(code);
             if (isValid) {
                 return ResponseEntity.ok("Verification successful");
@@ -162,12 +172,12 @@ public class AuthController {
             // Encoder le nouveau mot de passe
             String encodedPassword = passwordEncoder.encode(newPassword);
 
-            // Créer un nouvel objet UserDto contenant seulement le mot de passe encodé
-            UserDto updatedUserDetails = new UserDto();
-            updatedUserDetails.setPassword(encodedPassword);
+            // Mettre à jour uniquement le mot de passe dans l'utilisateur existant
+            user.setPassword(encodedPassword);
 
-            // Appeler la méthode updateUser avec l'ID de l'utilisateur et les nouvelles informations
-            userService.updateUser(user.getId(), updatedUserDetails);
+            // Appeler la méthode updateUser avec les informations mises à jour
+            logger.info("user details {}", user);
+            userService.updateUser(user.getId(), user);
 
             return ResponseEntity.ok("Password reset successful");
         } catch (TransactionSystemException ex) {
@@ -181,7 +191,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
-
-
 
 }

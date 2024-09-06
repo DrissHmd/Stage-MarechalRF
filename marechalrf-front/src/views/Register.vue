@@ -70,6 +70,8 @@ export default defineComponent({
 
         console.log('Registration successful:', response.data);
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('roleId', response.data.roleId);
+        localStorage.setItem('userId', response.data.id)
         router.push('/');
       } catch (error) {
         if (axios.isAxiosError(error)) {

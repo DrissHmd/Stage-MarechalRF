@@ -42,6 +42,9 @@
       <li v-if="isLoggedIn" class="navbar-item" @click="toggleDropdown">
         <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
         <ul v-if="isDropdownOpen" class="dropdown-menu">
+          <li v-if="!isAdmin">
+            <router-link to="/profil">Mon Profil</router-link>
+          </li>
           <router-link v-if="isAdmin" class="dashboard-link" to="/dashboard">Dashboard</router-link>
           <li @click="logout">Déconnexion</li>
         </ul>
@@ -72,6 +75,7 @@ export default defineComponent({
     const logout = () => {
       localStorage.removeItem('roleId');
       localStorage.removeItem('token');
+      localStorage.removeItem('userId');
       router.push('/');
       setTimeout(() => {
         location.reload();

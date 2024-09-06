@@ -5,7 +5,6 @@ import Contact from '../views/Contact.vue';
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
 import ForgotPassword from '../views/ForgotPassword.vue';
-import VerifyCode from '../views/VerifyCode.vue';
 import Dashboard from '../views/Dashboard.vue'
 import UserEdit from '@/views/UserEdit.vue';
 import TrainingRequest from '@/views/TrainingRequest.vue';
@@ -44,11 +43,6 @@ const routes = [
     name: 'ForgotPassword',
     component: ForgotPassword 
   },
-  { 
-    path: '/verify-code',
-    name: 'VerifyCode', 
-    component: VerifyCode 
-  },
   {
     path: '/training-request',
     component: TrainingRequest,
@@ -79,6 +73,12 @@ const routes = [
     component: UserEdit,
     props: true,
     meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  {
+    path: '/profil',
+    name: 'Profil',
+    component: UserEdit,
+    meta: { requiresAuth: true }, // Protéger par authentification
   }
 ];
 
