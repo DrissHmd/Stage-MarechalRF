@@ -118,7 +118,7 @@ public class AuthController {
 
         String verificationCode = generateVerificationCode();  // Générer un nouveau code
         userService.saveVerificationCode(user, verificationCode);  // Sauvegarder le code dans la table VerificationCode
-        //userService.sendVerificationEmail(user, verificationCode);  // Envoyer l'email de vérification
+        userService.sendVerificationEmail(user, verificationCode);  // Envoyer l'email de vérification
 
         return ResponseEntity.ok("Verification code sent to your email");
     }

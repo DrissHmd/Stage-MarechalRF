@@ -36,7 +36,7 @@
     <div>
       <input type="checkbox" v-model="localForm.consent" id="consent" required />
       <label for="consent">Mentions légales *</label>
-      En cochant la case ci-dessus, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis d'assurance, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données.
+      En cochant la case ci-dessus, j'accepte que les informations et documents que je transmets à MARECHAL Recrutement et Formation soient exploités dans le cadre d'études tarifaires et la demande de devis en matière de formation et de recrutement, ainsi que la relation commerciale qui peut en découler, conformément au Règlement Général de Protection des Données.
     </div>
   </div>
 </template>

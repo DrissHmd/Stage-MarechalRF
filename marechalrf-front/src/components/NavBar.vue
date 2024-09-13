@@ -34,14 +34,15 @@
         </router-link>
       </li>
       <li v-if="!isLoggedIn" class="navbar-item">
-        <router-link to="/login">
+        <router-link to="/login" > <!-- à changer en ' to="/login" ' ou bien en ' to="/" ' lorsque le compte utilisateur doit être fonctionnel ou non -->
           <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
-          Compte
+          Compte  <!-- Compte <br> (bientôt disponible) / Compte -->
         </router-link>
       </li>
       <li v-if="isLoggedIn" class="navbar-item" @click="toggleDropdown">
         <img src="/account-logo.png" alt="Account Logo" class="nav-logo">
         <ul v-if="isDropdownOpen" class="dropdown-menu">
+          <router-link class="dashboard-link" to="/documents">Documents</router-link>
           <li v-if="!isAdmin">
             <router-link to="/profil">Mon Profil</router-link>
           </li>

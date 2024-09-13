@@ -11,6 +11,7 @@ import TrainingRequest from '@/views/TrainingRequest.vue';
 import Section1 from '@/views/Section1.vue';
 import Section2 from '@/views/Section2.vue';
 import Section3 from '@/views/Section3.vue';
+import FileUpload from '@/views/FileUpload.vue';
 
 const routes = [
   {
@@ -78,7 +79,13 @@ const routes = [
     path: '/profil',
     name: 'Profil',
     component: UserEdit,
-    meta: { requiresAuth: true }, // Protéger par authentification
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/documents',
+    name: 'Documents',
+    component: FileUpload,
+    meta: {requireAuth: true}
   }
 ];
 
